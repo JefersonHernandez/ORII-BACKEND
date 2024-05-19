@@ -10,7 +10,7 @@ import { MovilidadActor } from "./entity/MovilidadActor";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
-  host: "localhost",
+  host: "host.docker.internal",
   port: 3306,
   username: "root",
   password: "",

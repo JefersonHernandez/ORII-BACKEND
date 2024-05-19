@@ -59,6 +59,28 @@ Steps to run this project:
 * Go to your Downloads folder on your computer
 * Unzip the .zip file named DatAnnouncement-main
 
+<details>
+<summary>Develop using docker</summary>
+Builds the Docker image using the Dockerfile
+
+```bash
+  docker build -t oriback .
+```
+
+To run your development environment, simply use:
+
+```bash
+   docker-compose up
+```
+
+When you need to stop the containers, you can use:
+
+```bash
+   docker-compose down
+```
+
+</details>
+
 ![GitHub](https://img.shields.io/badge/GitHub-important)
 * Perform a Fork. This will allow you to have a copy of the repository in your own account.
 
