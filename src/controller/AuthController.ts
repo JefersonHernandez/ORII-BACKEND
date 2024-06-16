@@ -44,7 +44,7 @@ class AuthController {
     res.json({
       message: "Inicio de Sesion Exitoso",
       token: token,
-      username: user.firstName+" "+user.lastName,
+      username: user.firstName + " " + user.lastName,
       userId: user.id,
       role: user.role,
     });
