@@ -8,7 +8,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
   let jwtPayload;
 
   try {
-    jwtPayload = <any>jwt.verify(token, config.jwtSecret);
+    jwtPayload = <any>jwt.verify(token, config.JWT_SECRET);
     res.locals.jwtPayload = jwtPayload;
   } catch (error) {
     return res.status(401).json({
@@ -18,7 +18,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
 
   const { userId, email } = jwtPayload;
 
-  const newToken = jwt.sign({ userId, email }, config.jwtSecret, {
+  const newToken = jwt.sign({ userId, email }, config.JWT_SECRET, {
     expiresIn: "1h",
   });
   res.setHeader("token", newToken);
