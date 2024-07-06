@@ -1,7 +1,8 @@
 import { Router } from "express";
+import { CatalogoController } from "../controller/CatalogoController";
 import { checkJwt } from "../middlewares/JWT";
 import { checkRole } from "../middlewares/role";
-import { CatalogoController } from "../controller/CatalogoController";
+
 const router = Router();
 
 //Obtener catalogo de Fuente De Financiación Nacional
@@ -51,6 +52,34 @@ router.get(
   "/activity",
   [checkJwt, checkRole(["admin"])],
   CatalogoController.getAllActividad
+);
+
+//Obtener catalogo de Aplicacion de Movilidad
+router.get(
+  "/mobility-application",
+  [checkJwt, checkRole(["admin"])],
+  CatalogoController.getAllMobilityApplication
+);
+
+//Obtener catalogo de genero
+router.get(
+  "/gender",
+  [checkJwt, checkRole(["admin"])],
+  CatalogoController.getAllGenders
+);
+
+//Obtener catalogo de rol
+router.get(
+  "/rol",
+  [checkJwt, checkRole(["admin"])],
+  CatalogoController.getAllRols
+);
+
+//Obtener catalogo de semestre
+router.get(
+  "/semester",
+  [checkJwt, checkRole(["admin"])],
+  CatalogoController.getAllSemesters
 );
 
 export default router;

@@ -1,12 +1,13 @@
 import { Router } from "express";
-import auth from "./auth";
-import user from "./user";
-import facultad from "./facultad";
-import programa from "./programa";
-import country from "./country";
 import actor from "./actor";
-import movilidad_actor from "./mov_actor";
+import auth from "./auth";
 import catalog from "./catalog";
+import country from "./country";
+import facultad from "./facultad";
+import movilidad_actor from "./mov_actor";
+import programa from "./programa";
+import rol_actividad from "./rol_actividad";
+import user from "./user";
 
 const routes = Router();
 
@@ -25,5 +26,7 @@ routes.use("/actor", actor);
 routes.use("/movilidad_actor", movilidad_actor);
 
 routes.use("/catalog", catalog);
+
+routes.use("/rol_actividad", rol_actividad);
 
 export default routes;

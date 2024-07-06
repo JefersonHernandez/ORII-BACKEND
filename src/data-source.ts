@@ -1,19 +1,24 @@
 import "reflect-metadata";
-import config from "./config/config";
 import { DataSource } from "typeorm";
+import config from "./config/config";
+import { Actividad } from "./entity/Actividad";
 import { Actor } from "./entity/Actor";
+import { BaseCatalogEntity } from "./entity/BaseCatalogEntity ";
+import { EstadoCivil } from "./entity/EstadoCivil";
 import { Facultad } from "./entity/Facultad";
+import { FuenteFinanciacionInternacional } from "./entity/FuenteFinanciacionInternacional";
+import { FuenteFinanciacionNacional } from "./entity/FuenteFinanciacionNacional";
+import { Gender } from "./entity/Gender";
+import { MobilityApplication } from "./entity/MobilityApplication";
+import { ModalidadMovilidad } from "./entity/ModalidadMovilidad";
 import { MovilidadActor } from "./entity/MovilidadActor";
 import { Programa } from "./entity/Programa";
-import { User } from "./entity/User";
-import { BaseCatalogEntity } from "./entity/BaseCatalogEntity ";
-import { FuenteFinanciacionNacional } from "./entity/FuenteFinanciacionNacional";
-import { FuenteFinanciacionInternacional } from "./entity/FuenteFinanciacionInternacional";
+import { Rol } from "./entity/Rol";
+import { RolActividad } from "./entity/RolActividad";
+import { Semester } from "./entity/Semester";
 import { TipoDocumento } from "./entity/TipoDocumento";
-import { EstadoCivil } from "./entity/EstadoCivil";
 import { TipoMovilidad } from "./entity/TipoMovilidad";
-import { ModalidadMovilidad } from "./entity/ModalidadMovilidad";
-import { Actividad } from "./entity/Actividad";
+import { User } from "./entity/User";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -38,6 +43,11 @@ export const AppDataSource = new DataSource({
     TipoMovilidad,
     ModalidadMovilidad,
     Actividad,
+    MobilityApplication,
+    Gender,
+    Rol,
+    Semester,
+    RolActividad,
   ],
   migrations: [],
   subscribers: [],

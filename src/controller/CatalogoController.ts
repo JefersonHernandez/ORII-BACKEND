@@ -1,12 +1,16 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
-import { FuenteFinanciacionNacional } from "../entity/FuenteFinanciacionNacional";
-import { FuenteFinanciacionInternacional } from "../entity/FuenteFinanciacionInternacional";
-import { TipoDocumento } from "../entity/TipoDocumento";
-import { EstadoCivil } from "../entity/EstadoCivil";
-import { TipoMovilidad } from "../entity/TipoMovilidad";
-import { ModalidadMovilidad } from "../entity/ModalidadMovilidad";
 import { Actividad } from "../entity/Actividad";
+import { EstadoCivil } from "../entity/EstadoCivil";
+import { FuenteFinanciacionInternacional } from "../entity/FuenteFinanciacionInternacional";
+import { FuenteFinanciacionNacional } from "../entity/FuenteFinanciacionNacional";
+import { Gender } from "../entity/Gender";
+import { MobilityApplication } from "../entity/MobilityApplication";
+import { ModalidadMovilidad } from "../entity/ModalidadMovilidad";
+import { Rol } from "../entity/Rol";
+import { Semester } from "../entity/Semester";
+import { TipoDocumento } from "../entity/TipoDocumento";
+import { TipoMovilidad } from "../entity/TipoMovilidad";
 
 export class CatalogoController {
   static getAllFuenteFinanciacionNacional = async (
@@ -63,6 +67,34 @@ export class CatalogoController {
 
   static getAllActividad = async (req: Request, res: Response) => {
     const catalogRepository = AppDataSource.getRepository(Actividad);
+
+    const data = await catalogRepository.find({ select: ["id", "nombre"] });
+    return res.status(200).json(data);
+  };
+
+  static getAllMobilityApplication = async (req: Request, res: Response) => {
+    const catalogRepository = AppDataSource.getRepository(MobilityApplication);
+
+    const data = await catalogRepository.find({ select: ["id", "nombre"] });
+    return res.status(200).json(data);
+  };
+
+  static readonly getAllGenders = async (req: Request, res: Response) => {
+    const catalogRepository = AppDataSource.getRepository(Gender);
+
+    const data = await catalogRepository.find({ select: ["id", "nombre"] });
+    return res.status(200).json(data);
+  };
+
+  static readonly getAllRols = async (req: Request, res: Response) => {
+    const catalogRepository = AppDataSource.getRepository(Rol);
+
+    const data = await catalogRepository.find({ select: ["id", "nombre"] });
+    return res.status(200).json(data);
+  };
+
+  static readonly getAllSemesters = async (req: Request, res: Response) => {
+    const catalogRepository = AppDataSource.getRepository(Semester);
 
     const data = await catalogRepository.find({ select: ["id", "nombre"] });
     return res.status(200).json(data);

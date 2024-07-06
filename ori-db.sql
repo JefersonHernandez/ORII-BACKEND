@@ -293,6 +293,20 @@ ALTER TABLE `programa`
   ADD CONSTRAINT `prog_fk_facu` FOREIGN KEY (`facultadId`) REFERENCES `facultad` (`id`);
 COMMIT;
 
+CREATE TABLE `mobility_application` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nombre` TEXT NOT NULL,
+    `fecha_creacion` DATETIME NOT NULL,
+    `fecha_actualizacion` DATETIME NOT NULL,
+    `fecha_eliminacion` DATETIME NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `mobility_application` (`nombre`, `fecha_creacion`, `fecha_actualizacion`, `fecha_eliminacion`)
+VALUES
+    ('SI', NOW(), NOW(), NULL),
+    ('NO APLICA', NOW(), NOW(), NULL);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

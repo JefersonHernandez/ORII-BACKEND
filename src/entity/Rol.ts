@@ -3,7 +3,7 @@ import { BaseCatalogEntity } from "./BaseCatalogEntity ";
 import { RolActividad } from "./RolActividad";
 
 @Entity()
-export class Actividad extends BaseCatalogEntity {
-  @OneToMany(() => RolActividad, (rolActividad) => rolActividad.actividad)
+export class Rol extends BaseCatalogEntity {
+  @OneToMany(() => RolActividad, (rolActividad) => rolActividad.rol)
   rolesActividades: RolActividad[];
 }
