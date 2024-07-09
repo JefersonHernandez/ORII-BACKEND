@@ -1,14 +1,14 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Programa } from "./Programa";
+import { Ciudad } from "./Ciudad";
 
 @Entity()
-export class Facultad {
+export class Pais {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   nombre: string;
 
-  @OneToMany(() => Programa, (programa) => programa.facultad)
-  programas: Programa[];
+  @OneToMany(() => Ciudad, (ciudad) => ciudad.pais)
+  ciudades: Ciudad[];
 }

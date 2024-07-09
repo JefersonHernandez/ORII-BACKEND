@@ -4,6 +4,10 @@ import config from "./config/config";
 import { Actividad } from "./entity/Actividad";
 import { Actor } from "./entity/Actor";
 import { BaseCatalogEntity } from "./entity/BaseCatalogEntity ";
+import { Ciudad } from "./entity/Ciudad";
+import { Institucion } from "./entity/Institucion";
+import { Contacto } from "./entity/Contacto";
+import { Convenio } from "./entity/Convenio";
 import { EstadoCivil } from "./entity/EstadoCivil";
 import { Facultad } from "./entity/Facultad";
 import { FuenteFinanciacionInternacional } from "./entity/FuenteFinanciacionInternacional";
@@ -12,12 +16,18 @@ import { Gender } from "./entity/Gender";
 import { MobilityApplication } from "./entity/MobilityApplication";
 import { ModalidadMovilidad } from "./entity/ModalidadMovilidad";
 import { MovilidadActor } from "./entity/MovilidadActor";
+import { Pais } from "./entity/Pais";
 import { Programa } from "./entity/Programa";
+import { ProgramaInstitucion } from "./entity/ProgramaInstitucion";
+import { ProgramaInstitucionConvenio } from "./entity/ProgramaInstitucionConvenio";
 import { Rol } from "./entity/Rol";
 import { RolActividad } from "./entity/RolActividad";
 import { Semester } from "./entity/Semester";
+import { TipoConvenio } from "./entity/TipoConvenio";
 import { TipoDocumento } from "./entity/TipoDocumento";
 import { TipoMovilidad } from "./entity/TipoMovilidad";
+import { TipoMovilidadConvenio } from "./entity/TipoMovilidadConvenio";
+import { TipoMovilidadConvenioConvenio } from "./entity/TipoMovilidadConvenioConvenio";
 import { User } from "./entity/User";
 
 export const AppDataSource = new DataSource({
@@ -48,6 +58,18 @@ export const AppDataSource = new DataSource({
     Rol,
     Semester,
     RolActividad,
+    Pais,
+    Convenio,
+    Ciudad,
+    Institucion,
+    Contacto,
+    Programa,
+    TipoMovilidad,
+    TipoMovilidadConvenio,
+    TipoMovilidadConvenioConvenio,
+    ProgramaInstitucion,
+    ProgramaInstitucionConvenio,
+    TipoConvenio,
   ],
   migrations: [],
   subscribers: [],
