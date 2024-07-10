@@ -6,7 +6,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Ciudad } from "./Ciudad";
 import { ProgramaInstitucionConvenio } from "./ProgramaInstitucionConvenio";
 import { TipoConvenio } from "./TipoConvenio";
 import { TipoMovilidadConvenioConvenio } from "./TipoMovilidadConvenioConvenio";
@@ -18,10 +17,6 @@ export class Convenio {
 
   @Column()
   nombre: string;
-
-  @ManyToOne(() => Ciudad, (ciudad) => ciudad.instituciones)
-  @JoinColumn({ name: "ciudad_id" })
-  ciudad: Ciudad;
 
   @ManyToOne(() => TipoConvenio, (tipoConvenio) => tipoConvenio.convenios)
   @JoinColumn({ name: "tipo_convenio_id" })

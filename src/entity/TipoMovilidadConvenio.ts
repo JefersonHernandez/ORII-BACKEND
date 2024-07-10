@@ -1,12 +1,18 @@
-import { Entity, OneToMany } from "typeorm";
-import { BaseCatalogEntity } from "./BaseCatalogEntity ";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TipoMovilidadConvenioConvenio } from "./TipoMovilidadConvenioConvenio";
 
 @Entity()
-export class TipoMovilidadConvenio extends BaseCatalogEntity {
+export class TipoMovilidadConvenio {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  nombre: string;
+
   @OneToMany(
     () => TipoMovilidadConvenioConvenio,
-    (tipoMovilidadConvenioConvenio) => tipoMovilidadConvenioConvenio.id
+    (tipoMovilidadConvenioConvenio) =>
+      tipoMovilidadConvenioConvenio.tipoMovilidadConvenio
   )
   tipoMovilidadConvenioConvenios: TipoMovilidadConvenioConvenio[];
 }
