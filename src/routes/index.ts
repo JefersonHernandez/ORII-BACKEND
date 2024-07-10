@@ -10,6 +10,7 @@ import institucion from "./institucion";
 import movilidad_actor from "./mov_actor";
 import pais from "./pais";
 import programa from "./programa";
+import programa_institucion from "./programa_institucion";
 import rol_actividad from "./rol_actividad";
 import tipo_convenio from "./tipo_convenio";
 import tipo_movilidad_convenio from "./tipo_movilidad_convenio";
@@ -52,5 +53,7 @@ routes.use(
   "/tipo_movilidad_convenio_convenios",
   tipo_movilidad_convenio_convenio
 );
+
+routes.use("/programa_institucion", programa_institucion);
 
 export default routes;
