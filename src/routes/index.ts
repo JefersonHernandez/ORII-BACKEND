@@ -4,6 +4,7 @@ import auth from "./auth";
 import catalog from "./catalog";
 import ciudad from "./ciudad";
 import contacto from "./contacto";
+import convenio from "./convenio";
 import country from "./country";
 import facultad from "./facultad";
 import institucion from "./institucion";
@@ -11,6 +12,7 @@ import movilidad_actor from "./mov_actor";
 import pais from "./pais";
 import programa from "./programa";
 import programa_institucion from "./programa_institucion";
+import programa_institucion_convenio from "./programa_institucion_convenio";
 import rol_actividad from "./rol_actividad";
 import tipo_convenio from "./tipo_convenio";
 import tipo_movilidad_convenio from "./tipo_movilidad_convenio";
@@ -55,5 +57,8 @@ routes.use(
 );
 
 routes.use("/programa_institucion", programa_institucion);
+
+routes.use("/programa_institucion_convenio", programa_institucion_convenio);
+routes.use("/convenio", convenio);
 
 export default routes;
