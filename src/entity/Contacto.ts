@@ -24,6 +24,9 @@ export abstract class Contacto {
   @Column()
   sitio_web: string;
 
+  @Column()
+  institucion_id: number;
+
   @ManyToOne(() => Institucion, (institucion) => institucion.contactos)
   @JoinColumn({ name: "institucion_id" })
   institucion: Institucion;

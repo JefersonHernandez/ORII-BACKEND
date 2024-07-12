@@ -19,4 +19,20 @@ export class PaisController {
     });
     return res.status(200).json(data);
   };
+
+  static readonly insertPais = async (req: Request, res: Response) => {
+    const { nombre } = req.body;
+
+    const repository = AppDataSource.getRepository(Pais);
+
+    try {
+      const nuevoPais = repository.create({ nombre });
+
+      await repository.save(nuevoPais);
+
+      return res.status(201).json(nuevoPais);
+    } catch (error) {
+      return res.status(500).json({ error: "Error al insertar el país" });
+    }
+  };
 }

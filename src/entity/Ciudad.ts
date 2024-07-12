@@ -17,6 +17,9 @@ export class Ciudad {
   @Column()
   nombre: string;
 
+  @Column()
+  pais_id: number;
+
   @ManyToOne(() => Pais, (pais) => pais.ciudades)
   @JoinColumn({ name: "pais_id" })
   pais: Pais;

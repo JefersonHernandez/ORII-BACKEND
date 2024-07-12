@@ -21,4 +21,26 @@ export class ContactoController {
     });
     return res.status(200).json(data);
   };
+
+  static readonly insert = async (req: Request, res: Response) => {
+    const { nombre, cargo, correo, sitio_web, institucion_id } = req.body;
+
+    const repository = AppDataSource.getRepository(Contacto);
+
+    try {
+      const newItem = repository.create({
+        nombre,
+        cargo,
+        correo,
+        sitio_web,
+        institucion_id: Number(institucion_id),
+      });
+
+      await repository.save(newItem);
+
+      return res.status(201).json(newItem);
+    } catch (error) {
+      return res.status(500).json({ error: "Error al insertar contacto" });
+    }
+  };
 }

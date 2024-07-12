@@ -19,4 +19,20 @@ export class CiudadController {
     });
     return res.status(200).json(data);
   };
+
+  static readonly insert = async (req: Request, res: Response) => {
+    const { nombre, pais_id } = req.body;
+
+    const repository = AppDataSource.getRepository(Ciudad);
+
+    try {
+      const newItem = repository.create({ nombre, pais_id: Number(pais_id) });
+
+      await repository.save(newItem);
+
+      return res.status(201).json(newItem);
+    } catch (error) {
+      return res.status(500).json({ error: "Error al insertar ciudad" });
+    }
+  };
 }
