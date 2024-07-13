@@ -6,7 +6,9 @@ export class CiudadController {
   static readonly getCiudades = async (_: Request, res: Response) => {
     const repository = AppDataSource.getRepository(Ciudad);
 
-    const data = await repository.find({ select: ["id", "nombre"] });
+    const data = await repository.find({
+      select: ["id", "nombre", "pais_id"],
+    });
     return res.status(200).json(data);
   };
 

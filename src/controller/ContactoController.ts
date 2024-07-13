@@ -7,7 +7,10 @@ export class ContactoController {
     const repository = AppDataSource.getRepository(Contacto);
 
     const data = await repository.find({
-      select: ["id", "nombre"],
+      select: ["id", "nombre", "cargo", "sitio_web", "institucion_id"],
+      relations: {
+        institucion: true,
+      },
     });
     return res.status(200).json(data);
   };
@@ -16,8 +19,11 @@ export class ContactoController {
     const { id } = req.params;
     const repository = AppDataSource.getRepository(Contacto);
 
-    const data = await repository.findBy({
-      id: Number(id),
+    const data = await repository.findOne({
+      where: { id: Number(id) },
+      relations: {
+        institucion: true,
+      },
     });
     return res.status(200).json(data);
   };

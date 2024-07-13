@@ -27,4 +27,24 @@ export class TipoMovilidadConvenioController {
     });
     return res.status(200).json(data);
   };
+
+  static readonly add = async (req: Request, res: Response) => {
+    const { nombre } = req.body;
+
+    const repository = AppDataSource.getRepository(TipoMovilidadConvenio);
+
+    try {
+      const newItem = repository.create({
+        nombre,
+      });
+
+      await repository.save(newItem);
+
+      return res.status(201).json(newItem);
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ error: "Error al insertar el tipo de movilidad" });
+    }
+  };
 }
