@@ -1,4 +1,5 @@
 import {
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -13,6 +14,9 @@ import { ProgramaInstitucionConvenio } from "./ProgramaInstitucionConvenio";
 export abstract class ProgramaInstitucion {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  institucion_id: number;
 
   @OneToMany(
     () => ProgramaInstitucionConvenio,
