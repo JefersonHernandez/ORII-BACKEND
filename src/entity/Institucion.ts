@@ -18,6 +18,9 @@ export class Institucion {
   @Column()
   nombre: string;
 
+  @Column()
+  ciudad_id: number;
+
   @OneToMany(() => Contacto, (contacto) => contacto.institucion)
   contactos: Contacto[];
 
