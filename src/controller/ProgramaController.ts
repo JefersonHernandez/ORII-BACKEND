@@ -58,4 +58,24 @@ export class ProgramaController {
       });
     }
   };
+
+  static readonly createPrograma = async (req: Request, res: Response) => {
+    const { name, facultad_id } = req.body;
+
+    const repository = AppDataSource.getRepository(Programa);
+
+    try {
+      const newPrograma = repository.create({
+        name,
+        facultadId: facultad_id,
+      });
+
+      const response = await repository.save(newPrograma);
+
+      return res.status(201).json(response);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Error al insertar convenio" });
+    }
+  };
 }

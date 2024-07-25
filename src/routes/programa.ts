@@ -7,6 +7,7 @@ const router = Router();
 //Obtener datos de todos los programas
 
 router.get("/", ProgramaController.getAllDataOfPrograms);
+router.post("/", ProgramaController.createPrograma);
 
 //Obtener datos de un programa especifico
 router.get("/:id", ProgramaController.getProgramById);
