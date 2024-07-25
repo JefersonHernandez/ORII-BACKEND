@@ -64,4 +64,34 @@ export class ProgramaInstitucionController {
       });
     }
   };
+
+  static readonly addProgramaInstitucion = async (
+    req: Request,
+    res: Response
+  ) => {
+    const items = req.body;
+
+    const repository = AppDataSource.getRepository(ProgramaInstitucion);
+
+    try {
+      const response = await AppDataSource.transaction(
+        async (transactionalEntityManager) => {
+          for await (const iterator of items) {
+            const newInstitucion = repository.create({
+              institucion_id: iterator.institucion_id,
+              programa_id: iterator.programa_id,
+            });
+            await transactionalEntityManager.save(newInstitucion);
+          }
+        }
+      );
+
+      return res.status(201).json(response);
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ error: "Error al insertar programa institucion" });
+    }
+  };
 }

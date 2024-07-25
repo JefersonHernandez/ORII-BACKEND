@@ -3,10 +3,11 @@ import { ProgramaInstitucionController } from "../controller/ProgramaInstitucion
 
 const router = Router();
 
+router.get("/", ProgramaInstitucionController.getAllProgramaInstitucions);
+router.post("/", ProgramaInstitucionController.addProgramaInstitucion);
 router.get(
   "/institucion/:id",
   ProgramaInstitucionController.getAllProgramaByInstitucion
 );
-router.get("/", ProgramaInstitucionController.getAllProgramaInstitucions);
 
 export default router;

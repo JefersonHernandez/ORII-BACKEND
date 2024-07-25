@@ -18,6 +18,9 @@ export abstract class ProgramaInstitucion {
   @Column()
   institucion_id: number;
 
+  @Column()
+  programa_id: number;
+
   @OneToMany(
     () => ProgramaInstitucionConvenio,
     (programaInstitucionConvenio) =>
