@@ -43,7 +43,7 @@ export class ProgramaInstitucionController {
       const data = await repository.find({
         relations: {
           programa: true,
-          institucion: false,
+          institucion: true,
         },
         where: {
           institucion_id: Number(id),

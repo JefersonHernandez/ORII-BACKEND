@@ -7,7 +7,14 @@ export class InstitucionController {
   static readonly getInstituciones = async (_: Request, res: Response) => {
     const repository = AppDataSource.getRepository(Institucion);
 
-    const data = await repository.find({ select: ["id", "nombre"] });
+    const data = await repository.find({
+      select: ["id", "nombre", "ciudad_id"],
+      relations: {
+        contactos: true,
+        ciudad: true,
+        programaInstituciones: true,
+      },
+    });
     return res.status(200).json(data);
   };
 
@@ -15,8 +22,12 @@ export class InstitucionController {
     const { id } = req.params;
     const repository = AppDataSource.getRepository(Institucion);
 
-    const data = await repository.findBy({
-      id: Number(id),
+    const data = await repository.findOne({
+      where: { id: Number(id) },
+      relations: {
+        ciudad: true,
+        contactos: true,
+      },
     });
     return res.status(200).json(data);
   };
