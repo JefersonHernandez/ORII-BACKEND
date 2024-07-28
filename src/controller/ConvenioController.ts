@@ -46,13 +46,11 @@ export class ConvenioController {
         fecha_finalizacion: date_end,
       });
 
-      const response = await AppDataSource.transaction(
-        async (transactionalEntityManager) => {
-          await transactionalEntityManager.save(newConvenio);
-        }
-      );
+      await AppDataSource.transaction(async (transactionalEntityManager) => {
+        await transactionalEntityManager.save(newConvenio);
+      });
 
-      return res.status(201).json(response);
+      return res.status(201).json({ message: "Convenio creado" });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: "Error al insertar convenio" });

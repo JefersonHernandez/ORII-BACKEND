@@ -74,19 +74,17 @@ export class ProgramaInstitucionController {
     const repository = AppDataSource.getRepository(ProgramaInstitucion);
 
     try {
-      const response = await AppDataSource.transaction(
-        async (transactionalEntityManager) => {
-          for await (const iterator of items) {
-            const newInstitucion = repository.create({
-              institucion_id: iterator.institucion_id,
-              programa_id: iterator.programa_id,
-            });
-            await transactionalEntityManager.save(newInstitucion);
-          }
+      await AppDataSource.transaction(async (transactionalEntityManager) => {
+        for await (const iterator of items) {
+          const newInstitucion = repository.create({
+            institucion_id: iterator.institucion_id,
+            programa_id: iterator.programa_id,
+          });
+          await transactionalEntityManager.save(newInstitucion);
         }
-      );
+      });
 
-      return res.status(201).json(response);
+      return res.status(201).json({ message: "asignación guardada" });
     } catch (error) {
       console.log(error);
       return res

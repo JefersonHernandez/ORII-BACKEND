@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
+import { Not } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Contacto } from "../entity/Contacto";
 import { Institucion } from "../entity/Institucion";
+
+const UFPS = 21;
 
 export class InstitucionController {
   static readonly getInstituciones = async (_: Request, res: Response) => {
@@ -44,26 +47,44 @@ export class InstitucionController {
         ciudad_id,
       });
 
-      const response = await AppDataSource.transaction(
-        async (transactionalEntityManager) => {
-          const response = await transactionalEntityManager.save(
-            newInstitucion
-          );
-          const newContacto = repositoryContacto.create({
-            nombre: contact_name,
-            cargo: charge,
-            correo: email,
-            sitio_web: web,
-            institucion_id: response.id,
-          });
-          await transactionalEntityManager.save(newContacto);
-        }
-      );
+      await AppDataSource.transaction(async (transactionalEntityManager) => {
+        const response = await transactionalEntityManager.save(newInstitucion);
+        const newContacto = repositoryContacto.create({
+          nombre: contact_name,
+          cargo: charge,
+          correo: email,
+          sitio_web: web,
+          institucion_id: response.id,
+        });
+        await transactionalEntityManager.save(newContacto);
+      });
 
-      return res.status(201).json(response);
+      return res.status(201).json({
+        message: "Se ha creado la institucion con exito",
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: "Error al insertar institucion" });
     }
+  };
+
+  static readonly getInstitucionesForConvenios = async (
+    _: Request,
+    res: Response
+  ) => {
+    const repository = AppDataSource.getRepository(Institucion);
+
+    const data = await repository.find({
+      select: ["id", "nombre", "ciudad_id"],
+      relations: {
+        contactos: true,
+        ciudad: true,
+        programaInstituciones: true,
+      },
+      where: {
+        id: Not(UFPS),
+      },
+    });
+    return res.status(200).json(data);
   };
 }

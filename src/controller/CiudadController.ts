@@ -3,13 +3,25 @@ import { AppDataSource } from "../data-source";
 import { Ciudad } from "../entity/Ciudad";
 
 export class CiudadController {
-  static readonly getCiudades = async (_: Request, res: Response) => {
+  static readonly getCiudades = async (req: Request, res: Response) => {
     const repository = AppDataSource.getRepository(Ciudad);
 
-    const data = await repository.find({
-      select: ["id", "nombre", "pais_id"],
-    });
-    return res.status(200).json(data);
+    const { pais_id } = req.query;
+
+    let ciudades = [];
+
+    if (pais_id) {
+      ciudades = await repository.find({
+        select: ["id", "nombre", "pais_id"],
+        where: { pais_id: Number(pais_id) },
+      });
+    } else {
+      ciudades = await repository.find({
+        select: ["id", "nombre", "pais_id"],
+      });
+    }
+
+    return res.status(200).json(ciudades);
   };
 
   static readonly getCiudad = async (req: Request, res: Response) => {
