@@ -4,7 +4,7 @@ import { AppDataSource } from "../data-source";
 import { Contacto } from "../entity/Contacto";
 import { Institucion } from "../entity/Institucion";
 
-const UFPS = 21;
+const UFPS = 23;
 
 export class InstitucionController {
   static readonly getInstituciones = async (_: Request, res: Response) => {

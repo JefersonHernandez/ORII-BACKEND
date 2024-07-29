@@ -1,4 +1,10 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Convenio } from "./Convenio";
 import { ProgramaInstitucion } from "./ProgramaInstitucion";
 
@@ -6,6 +12,12 @@ import { ProgramaInstitucion } from "./ProgramaInstitucion";
 export class ProgramaInstitucionConvenio {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  convenio_id: number;
+
+  @Column()
+  programa_institucion_id: number;
 
   @ManyToOne(
     () => Convenio,

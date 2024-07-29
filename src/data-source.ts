@@ -5,7 +5,6 @@ import { Actividad } from "./entity/Actividad";
 import { Actor } from "./entity/Actor";
 import { BaseCatalogEntity } from "./entity/BaseCatalogEntity ";
 import { Ciudad } from "./entity/Ciudad";
-import { Institucion } from "./entity/Institucion";
 import { Contacto } from "./entity/Contacto";
 import { Convenio } from "./entity/Convenio";
 import { EstadoCivil } from "./entity/EstadoCivil";
@@ -13,10 +12,12 @@ import { Facultad } from "./entity/Facultad";
 import { FuenteFinanciacionInternacional } from "./entity/FuenteFinanciacionInternacional";
 import { FuenteFinanciacionNacional } from "./entity/FuenteFinanciacionNacional";
 import { Gender } from "./entity/Gender";
+import { Institucion } from "./entity/Institucion";
 import { MobilityApplication } from "./entity/MobilityApplication";
 import { ModalidadMovilidad } from "./entity/ModalidadMovilidad";
 import { MovilidadActor } from "./entity/MovilidadActor";
 import { Pais } from "./entity/Pais";
+import { Parameters } from "./entity/Parameters";
 import { Programa } from "./entity/Programa";
 import { ProgramaInstitucion } from "./entity/ProgramaInstitucion";
 import { ProgramaInstitucionConvenio } from "./entity/ProgramaInstitucionConvenio";
@@ -70,6 +71,7 @@ export const AppDataSource = new DataSource({
     ProgramaInstitucion,
     ProgramaInstitucionConvenio,
     TipoConvenio,
+    Parameters,
   ],
   migrations: [],
   subscribers: [],

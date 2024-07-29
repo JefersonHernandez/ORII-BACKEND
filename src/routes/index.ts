@@ -10,6 +10,7 @@ import facultad from "./facultad";
 import institucion from "./institucion";
 import movilidad_actor from "./mov_actor";
 import pais from "./pais";
+import parameters from "./parameters";
 import programa from "./programa";
 import programa_institucion from "./programa_institucion";
 import programa_institucion_convenio from "./programa_institucion_convenio";
@@ -60,5 +61,6 @@ routes.use("/programa_institucion", programa_institucion);
 
 routes.use("/programa_institucion_convenio", programa_institucion_convenio);
 routes.use("/convenio", convenio);
+routes.use("/parameters", parameters);
 
 export default routes;
