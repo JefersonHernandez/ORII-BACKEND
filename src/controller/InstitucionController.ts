@@ -35,7 +35,7 @@ export class InstitucionController {
     return res.status(200).json(data);
   };
 
-  static readonly createInstitucion = async (req: Request, res: Response) => {
+  static readonly addInstitution = async (req: Request, res: Response) => {
     const { name, contact_name, charge, email, web, ciudad_id } = req.body;
 
     const repository = AppDataSource.getRepository(Institucion);
@@ -59,9 +59,8 @@ export class InstitucionController {
         await transactionalEntityManager.save(newContacto);
       });
 
-      return res.status(201).json({
-        message: "Se ha creado la institucion con exito",
-      });
+      res.status(201);
+      res.send();
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: "Error al insertar institucion" });

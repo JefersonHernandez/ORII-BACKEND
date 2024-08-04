@@ -65,7 +65,7 @@ export class ProgramaInstitucionController {
     }
   };
 
-  static readonly addProgramaInstitucion = async (
+  static readonly addInstitutionProgram = async (
     req: Request,
     res: Response
   ) => {
@@ -84,7 +84,8 @@ export class ProgramaInstitucionController {
         }
       });
 
-      return res.status(201).json({ message: "asignación guardada" });
+      res.status(201);
+      res.send();
     } catch (error) {
       console.log(error);
       return res

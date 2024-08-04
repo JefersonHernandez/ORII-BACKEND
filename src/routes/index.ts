@@ -40,10 +40,6 @@ routes.use("/catalog", catalog);
 
 routes.use("/rol_actividad", rol_actividad);
 
-routes.use("/pais", pais);
-
-routes.use("/ciudad", ciudad);
-
 routes.use("/instituciones", institucion);
 
 routes.use("/contactos", contacto);
@@ -62,5 +58,8 @@ routes.use("/programa_institucion", programa_institucion);
 routes.use("/programa_institucion_convenio", programa_institucion_convenio);
 routes.use("/convenio", convenio);
 routes.use("/parameters", parameters);
+
+routes.use("/agreement-countries", pais);
+routes.use("/cities", ciudad);
 
 export default routes;

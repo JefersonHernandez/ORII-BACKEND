@@ -144,9 +144,6 @@ export class MovilidadController {
     const fechaFinal = new Date(tiempoTranscurrido);
     const fechaInicial = new Date(tiempoTranscurrido - 550000000);
 
-    console.log(fechaInicial);
-    console.log(fechaFinal);
-
     const movilidadReporsitory = AppDataSource.getRepository(MovilidadActor);
     try {
       const data = await movilidadReporsitory.find({

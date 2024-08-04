@@ -3,8 +3,9 @@ import { CiudadController } from "../controller/CiudadController";
 
 const router = Router();
 
-router.get("/", CiudadController.getCiudades);
-router.post("/", CiudadController.insert);
-router.get("/:id", CiudadController.getCiudad);
+router.get("/", CiudadController.getCities);
+router.post("/", CiudadController.createCity);
+router.get("/:id", CiudadController.getCity);
+router.put("/:id", CiudadController.updateCity);
 
 export default router;

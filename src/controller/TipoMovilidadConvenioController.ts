@@ -28,7 +28,10 @@ export class TipoMovilidadConvenioController {
     return res.status(200).json(data);
   };
 
-  static readonly add = async (req: Request, res: Response) => {
+  static readonly addMobilityForAgreements = async (
+    req: Request,
+    res: Response
+  ) => {
     const { nombre } = req.body;
 
     const repository = AppDataSource.getRepository(TipoMovilidadConvenio);
@@ -40,7 +43,8 @@ export class TipoMovilidadConvenioController {
 
       await repository.save(newItem);
 
-      return res.status(201).json(newItem);
+      res.status(201);
+      res.send();
     } catch (error) {
       return res
         .status(500)

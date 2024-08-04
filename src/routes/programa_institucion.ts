@@ -4,7 +4,7 @@ import { ProgramaInstitucionController } from "../controller/ProgramaInstitucion
 const router = Router();
 
 router.get("/", ProgramaInstitucionController.getAllProgramaInstitucions);
-router.post("/", ProgramaInstitucionController.addProgramaInstitucion);
+router.post("/", ProgramaInstitucionController.addInstitutionProgram);
 router.get(
   "/institucion/:id",
   ProgramaInstitucionController.getAllProgramaByInstitucion
