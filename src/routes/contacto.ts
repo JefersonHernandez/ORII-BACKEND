@@ -3,8 +3,9 @@ import { ContactoController } from "../controller/ContactoController";
 
 const router = Router();
 
-router.get("/", ContactoController.getContactos);
-router.post("/", ContactoController.insert);
-router.get("/:id", ContactoController.getContacto);
+router.get("/", ContactoController.getContacts);
+router.post("/", ContactoController.createContact);
+router.get("/:id", ContactoController.getContact);
+router.put("/:id", ContactoController.updateContact);
 
 export default router;

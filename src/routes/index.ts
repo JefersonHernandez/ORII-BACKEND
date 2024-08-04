@@ -40,10 +40,6 @@ routes.use("/catalog", catalog);
 
 routes.use("/rol_actividad", rol_actividad);
 
-routes.use("/instituciones", institucion);
-
-routes.use("/contactos", contacto);
-
 routes.use("/tipo_convenios", tipo_convenio);
 
 routes.use("/tipo_movilidad_convenios", tipo_movilidad_convenio);
@@ -59,7 +55,10 @@ routes.use("/programa_institucion_convenio", programa_institucion_convenio);
 routes.use("/convenio", convenio);
 routes.use("/parameters", parameters);
 
+routes.use("/institutions", institucion);
+
 routes.use("/agreement-countries", pais);
 routes.use("/cities", ciudad);
+routes.use("/contacts", contacto);
 
 export default routes;
