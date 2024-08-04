@@ -4,6 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Ciudad } from "./Ciudad";
@@ -16,21 +17,32 @@ export class Institucion {
   id: number;
 
   @Column()
-  nombre: string;
+  name: string;
 
   @Column()
-  ciudad_id: number;
+  contact_id: number;
 
-  @OneToMany(() => Contacto, (contacto) => contacto.institucion)
-  contactos: Contacto[];
+  @Column()
+  city_id: number;
 
-  @ManyToOne(() => Ciudad, (ciudad) => ciudad.instituciones)
-  @JoinColumn({ name: "ciudad_id" })
-  ciudad: Ciudad;
+  @OneToOne(() => Contacto)
+  @JoinColumn({ name: "contact_id" })
+  contact: Contacto;
 
   @OneToMany(
     () => ProgramaInstitucion,
     (programaInstitucion) => programaInstitucion.programa
   )
   programaInstituciones: ProgramaInstitucion[];
+
+  // @ManyToOne(() => Ciudad, (city) => city.instituciones)
+  // @JoinColumn({ name: "city_id" })
+  // city: Ciudad;
+
+  // @OneToMany(() => Ciudad, (city) => city.city)
+  // cities: Ciudad[];
+
+  @ManyToOne(() => Ciudad, (city) => city.institucion)
+  @JoinColumn({ name: "city_id" })
+  city: Ciudad;
 }

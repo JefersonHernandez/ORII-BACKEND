@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Institucion } from "./Institucion";
 
 @Entity()
@@ -13,21 +7,17 @@ export abstract class Contacto {
   id: number;
 
   @Column()
-  nombre: string;
+  name: string;
 
   @Column()
-  cargo: string;
+  position: string;
 
   @Column()
-  correo: string;
+  email: string;
 
   @Column()
-  sitio_web: string;
+  web_site: string;
 
-  @Column()
-  institucion_id: number;
-
-  @ManyToOne(() => Institucion, (institucion) => institucion.contactos)
-  @JoinColumn({ name: "institucion_id" })
-  institucion: Institucion;
+  @OneToOne(() => Institucion, (institution) => institution.contact)
+  institution: Institucion;
 }

@@ -6,21 +6,19 @@ export class PaisController {
   static readonly getPaises = async (_: Request, res: Response) => {
     const repository = AppDataSource.getRepository(Pais);
 
-    const data = await repository.find({ select: ["id", "nombre"] });
-    return res
-      .status(200)
-      .json(data.map(({ nombre, ...rest }) => ({ ...rest, name: nombre })));
+    const data = await repository.find();
+    return res.status(200).json(data);
   };
 
   static readonly getAgreementCountry = async (req: Request, res: Response) => {
     const { id } = req.params;
     const repository = AppDataSource.getRepository(Pais);
 
-    const { nombre, ...rest } = await repository.findOne({
+    const data = await repository.findOne({
       where: { id: Number(id) },
     });
 
-    return res.status(200).json({ ...rest, name: nombre });
+    return res.status(200).json(data);
   };
 
   static readonly createAgreementCountry = async (
@@ -32,12 +30,11 @@ export class PaisController {
     const repository = AppDataSource.getRepository(Pais);
 
     try {
-      const country = repository.create({ nombre: name });
+      const country = repository.create({ name });
 
       await repository.save(country);
 
-      res.status(201);
-      res.send();
+      res.status(201).json({ message: "Country created successfully" });
     } catch (error) {
       return res.status(500).json({ error: "Error creating country" });
     }
@@ -59,7 +56,7 @@ export class PaisController {
         return res.status(404).json({ error: "Country not found" });
       }
 
-      country.nombre = name;
+      country.name = name;
 
       await repository.save(country);
 

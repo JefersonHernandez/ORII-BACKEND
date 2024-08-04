@@ -15,15 +15,22 @@ export class Ciudad {
   id: number;
 
   @Column()
-  nombre: string;
+  name: string;
 
   @Column()
-  pais_id: number;
+  country_id: number;
 
-  @ManyToOne(() => Pais, (pais) => pais.ciudades)
-  @JoinColumn({ name: "pais_id" })
-  pais: Pais;
+  @ManyToOne(() => Pais, (country) => country.cities)
+  @JoinColumn({ name: "country_id" })
+  country: Pais;
 
-  @OneToMany(() => Institucion, (institucion) => institucion.ciudad)
-  instituciones: Institucion[];
+  // @OneToMany(() => Institucion, (institucion) => institucion.city)
+  // instituciones: Institucion[];
+
+  // @ManyToOne(() => Institucion, (institucion) => institucion.cities)
+  // @JoinColumn({ name: "city_id" })
+  // city: Institucion;
+
+  @OneToMany(() => Institucion, (institucion) => institucion.city)
+  institucion: Institucion[];
 }

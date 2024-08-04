@@ -7,8 +7,8 @@ export class Pais {
   id: number;
 
   @Column()
-  nombre: string;
+  name: string;
 
-  @OneToMany(() => Ciudad, (ciudad) => ciudad.pais)
-  ciudades: Ciudad[];
+  @OneToMany(() => Ciudad, (city) => city.country)
+  cities: Ciudad[];
 }

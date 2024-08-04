@@ -1,66 +1,53 @@
 import { Request, Response } from "express";
 import { Not } from "typeorm";
 import { AppDataSource } from "../data-source";
-import { Contacto } from "../entity/Contacto";
 import { Institucion } from "../entity/Institucion";
 
 const UFPS = 23;
 
 export class InstitucionController {
-  static readonly getInstituciones = async (_: Request, res: Response) => {
+  static readonly getInstitutions = async (_: Request, res: Response) => {
     const repository = AppDataSource.getRepository(Institucion);
 
     const data = await repository.find({
-      select: ["id", "nombre", "ciudad_id"],
       relations: {
-        contactos: true,
-        ciudad: true,
         programaInstituciones: true,
+        contact: true,
       },
     });
     return res.status(200).json(data);
   };
 
-  static readonly getInstitucion = async (req: Request, res: Response) => {
+  static readonly getInstitution = async (req: Request, res: Response) => {
     const { id } = req.params;
     const repository = AppDataSource.getRepository(Institucion);
 
     const data = await repository.findOne({
       where: { id: Number(id) },
       relations: {
-        ciudad: true,
-        contactos: true,
+        programaInstituciones: true,
+        contact: true,
+        city: true,
       },
     });
     return res.status(200).json(data);
   };
 
-  static readonly addInstitution = async (req: Request, res: Response) => {
-    const { name, contact_name, charge, email, web, ciudad_id } = req.body;
+  static readonly createInstitution = async (req: Request, res: Response) => {
+    const { name, contact_id, city_id } = req.body;
 
     const repository = AppDataSource.getRepository(Institucion);
-    const repositoryContacto = AppDataSource.getRepository(Contacto);
 
     try {
-      const newInstitucion = repository.create({
-        nombre: name,
-        ciudad_id,
+      const institucion = repository.create({
+        name,
+        contact_id,
+        city_id,
       });
 
-      await AppDataSource.transaction(async (transactionalEntityManager) => {
-        const response = await transactionalEntityManager.save(newInstitucion);
-        const newContacto = repositoryContacto.create({
-          nombre: contact_name,
-          cargo: charge,
-          correo: email,
-          sitio_web: web,
-          institucion_id: response.id,
-        });
-        await transactionalEntityManager.save(newContacto);
-      });
+      await repository.save(institucion);
 
-      res.status(201);
-      res.send();
+      res.status(201).json({ message: "Institution created successfully" });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: "Error al insertar institucion" });
@@ -74,10 +61,8 @@ export class InstitucionController {
     const repository = AppDataSource.getRepository(Institucion);
 
     const data = await repository.find({
-      select: ["id", "nombre", "ciudad_id"],
       relations: {
-        contactos: true,
-        ciudad: true,
+        contact: true,
         programaInstituciones: true,
       },
       where: {
@@ -85,5 +70,31 @@ export class InstitucionController {
       },
     });
     return res.status(200).json(data);
+  };
+
+  static readonly updateInstitution = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { name, contact_id, city_id } = req.body;
+
+    const repository = AppDataSource.getRepository(Institucion);
+
+    try {
+      const institution = await repository.findOneBy({ id: parseInt(id, 10) });
+
+      if (!institution) {
+        return res.status(404).json({ error: "Institution not found" });
+      }
+
+      institution.name = name;
+      institution.contact_id = contact_id;
+      institution.city_id = city_id;
+
+      await repository.save(institution);
+
+      res.status(201).json({ message: "Institution updated successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Error al insertar institucion" });
+    }
   };
 }

@@ -12,33 +12,24 @@ export class CiudadController {
 
     if (country_id) {
       cities = await repository.find({
-        select: ["id", "nombre", "pais_id"],
-        where: { pais_id: Number(country_id) },
+        where: { country_id: Number(country_id) },
       });
     } else {
-      cities = await repository.find({
-        select: ["id", "nombre", "pais_id"],
-      });
+      cities = await repository.find();
     }
 
-    return res.status(200).json(
-      cities.map(({ nombre, pais_id, ...rest }) => ({
-        ...rest,
-        name: nombre,
-        country_id: pais_id,
-      }))
-    );
+    return res.status(200).json(cities);
   };
 
   static readonly getCity = async (req: Request, res: Response) => {
     const { id } = req.params;
     const repository = AppDataSource.getRepository(Ciudad);
 
-    const { nombre, pais_id, ...rest } = await repository.findOne({
+    const data = await repository.findOne({
       where: { id: Number(id) },
     });
 
-    return res.status(200).json({ ...rest, name: nombre, country_id: pais_id });
+    return res.status(200).json(data);
   };
 
   static readonly createCity = async (req: Request, res: Response) => {
@@ -48,14 +39,13 @@ export class CiudadController {
 
     try {
       const newItem = repository.create({
-        nombre: name,
-        pais_id: Number(country_id),
+        name,
+        country_id: Number(country_id),
       });
 
       await repository.save(newItem);
 
-      res.status(201);
-      res.send();
+      res.status(201).json({ message: "City created successfully" });
     } catch (error) {
       return res.status(500).json({ error: "Error creating city" });
     }
@@ -74,8 +64,8 @@ export class CiudadController {
         return res.status(404).json({ error: "City not found" });
       }
 
-      country.nombre = name;
-      country.pais_id = country_id;
+      country.name = name;
+      country.country_id = country_id;
 
       await repository.save(country);
 
