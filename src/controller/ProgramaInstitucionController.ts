@@ -86,23 +86,33 @@ export class ProgramaInstitucionController {
     const repository = AppDataSource.getRepository(ProgramaInstitucion);
 
     try {
-      const data = await repository.find({
+      const items = await repository.find({
         relations: {
-          programa: true,
           institucion: true,
+          programa: true,
         },
-        where: {
-          institucion_id: Number(id),
-        },
+        where: { institucion_id: Number(id) },
       });
 
-      if (data.length > 0) {
-        res.json(data);
-      } else {
-        res.status(404).json({
-          message: "No se encontraron programas",
-        });
-      }
+      const groupedByInstitucion = items.reduce((acc, item) => {
+        // Asegúrate de que la institución existe en el acumulador
+        if (!acc[item.institucion.id]) {
+          acc[item.institucion.id] = {
+            institucion: item.institucion,
+            programas: [],
+          };
+        }
+
+        // Añadir el programa a la institución correcta
+        acc[item.institucion.id].programas.push(item.programa);
+
+        return acc;
+      }, {} as Record<number, { institucion: any; programas: any[] }>);
+
+      // Convertir el resultado a un array si lo prefieres
+      const groupedArray = Object.values(groupedByInstitucion);
+
+      res.send(groupedArray);
     } catch (error) {
       res.status(404).json({
         message: "Sin resultados",
@@ -174,6 +184,90 @@ export class ProgramaInstitucionController {
       return res
         .status(500)
         .json({ error: "Error updating program institution" });
+    }
+  };
+
+  static readonly getProgramsGroupedByInstitution = async (
+    req: Request,
+    res: Response
+  ) => {
+    const repository = AppDataSource.getRepository(ProgramaInstitucion);
+
+    try {
+      const items = await repository.find({
+        relations: {
+          institucion: true,
+          programa: true,
+        },
+      });
+
+      const groupedByInstitucion = items.reduce((acc, item) => {
+        // Asegúrate de que la institución existe en el acumulador
+        if (!acc[item.institucion.id]) {
+          acc[item.institucion.id] = {
+            institucion: item.institucion,
+            programas: [],
+          };
+        }
+
+        // Añadir el programa a la institución correcta
+        acc[item.institucion.id].programas.push(item.programa);
+
+        return acc;
+      }, {} as Record<number, { institucion: any; programas: any[] }>);
+
+      // Convertir el resultado a un array si lo prefieres
+      const groupedArray = Object.values(groupedByInstitucion);
+
+      res.send(groupedArray);
+    } catch (error) {
+      res.status(404).json({
+        message: "Sin resultados",
+        error,
+      });
+    }
+  };
+
+  static readonly getProgramGroupedByInstitution = async (
+    req: Request,
+    res: Response
+  ) => {
+    const { id } = req.params;
+    const repository = AppDataSource.getRepository(ProgramaInstitucion);
+
+    try {
+      const items = await repository.find({
+        relations: {
+          institucion: true,
+          programa: true,
+        },
+        where: { institucion_id: Number(id) },
+      });
+
+      const groupedByInstitucion = items.reduce((acc, item) => {
+        // Asegúrate de que la institución existe en el acumulador
+        if (!acc[item.institucion.id]) {
+          acc[item.institucion.id] = {
+            institucion: item.institucion,
+            programas: [],
+          };
+        }
+
+        // Añadir el programa a la institución correcta
+        acc[item.institucion.id].programas.push(item.programa);
+
+        return acc;
+      }, {} as Record<number, { institucion: any; programas: any[] }>);
+
+      // Convertir el resultado a un array si lo prefieres
+      const groupedArray = Object.values(groupedByInstitucion)[0];
+
+      res.send(groupedArray);
+    } catch (error) {
+      res.status(404).json({
+        message: "Sin resultados",
+        error,
+      });
     }
   };
 }

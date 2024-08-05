@@ -35,13 +35,6 @@ export class Institucion {
   )
   programaInstituciones: ProgramaInstitucion[];
 
-  // @ManyToOne(() => Ciudad, (city) => city.instituciones)
-  // @JoinColumn({ name: "city_id" })
-  // city: Ciudad;
-
-  // @OneToMany(() => Ciudad, (city) => city.city)
-  // cities: Ciudad[];
-
   @ManyToOne(() => Ciudad, (city) => city.institucion)
   @JoinColumn({ name: "city_id" })
   city: Ciudad;

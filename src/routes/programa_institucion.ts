@@ -3,6 +3,16 @@ import { ProgramaInstitucionController } from "../controller/ProgramaInstitucion
 
 const router = Router();
 
+router.get(
+  "/grouped-by-institution",
+  ProgramaInstitucionController.getProgramsGroupedByInstitution
+);
+
+router.get(
+  "/grouped-by-institution/:id",
+  ProgramaInstitucionController.getProgramGroupedByInstitution
+);
+
 router.put("/:id", ProgramaInstitucionController.updateInstitutionProgram);
 router.get("/:id", ProgramaInstitucionController.getProgramInstitution);
 router.get("/", ProgramaInstitucionController.getAllProgramaInstitucions);
