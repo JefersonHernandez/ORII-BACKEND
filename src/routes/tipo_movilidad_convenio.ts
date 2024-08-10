@@ -4,7 +4,8 @@ import { TipoMovilidadConvenioController } from "../controller/TipoMovilidadConv
 const router = Router();
 
 router.get("/", TipoMovilidadConvenioController.getTipoMovilidadConvenios);
-router.post("/", TipoMovilidadConvenioController.addMobilityForAgreements);
-router.get("/:id", TipoMovilidadConvenioController.getTipoMovilidadConvenio);
+router.post("/", TipoMovilidadConvenioController.addAgreementMobility);
+router.put("/:id", TipoMovilidadConvenioController.updateAgreementMobility);
+router.get("/:id", TipoMovilidadConvenioController.getAgreementMobility);
 
 export default router;
