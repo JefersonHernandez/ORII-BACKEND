@@ -16,10 +16,10 @@ export class Convenio {
   id: number;
 
   @Column()
-  nombre: string;
+  name: string;
 
   @Column()
-  codification: string;
+  code: string;
 
   @Column()
   title: string;
@@ -28,10 +28,19 @@ export class Convenio {
   object: string;
 
   @Column()
-  tipo_convenio_id: number;
+  validity: string;
 
   @Column()
-  fecha_finalizacion: Date;
+  type_agreement_id: number;
+
+  @Column()
+  institution_id: number;
+
+  @Column()
+  end_date: Date;
+
+  @Column()
+  date: Date;
 
   @Column()
   seccional_cucuta: boolean;
@@ -39,19 +48,13 @@ export class Convenio {
   @Column()
   seccional_ocania: boolean;
 
-  @ManyToOne(() => TipoConvenio, (tipoConvenio) => tipoConvenio.convenios)
-  @JoinColumn({ name: "tipo_convenio_id" })
-  tipoConvenio: TipoConvenio;
+  @ManyToOne(() => TipoConvenio, (agreementType) => agreementType.agreements)
+  @JoinColumn({ name: "type_agreement_id" })
+  agreementType: TipoConvenio;
 
-  @OneToMany(
-    () => TipoMovilidadConvenioConvenio,
-    (tipoMovilidadConvenioConvenio) => tipoMovilidadConvenioConvenio.id
-  )
+  @OneToMany(() => TipoMovilidadConvenioConvenio, (table) => table.convenio)
   tipoMovilidadConvenioConvenios: TipoMovilidadConvenioConvenio[];
 
-  @OneToMany(
-    () => ProgramaInstitucionConvenio,
-    (programaInstitucionConvenios) => programaInstitucionConvenios.id
-  )
-  programaInstitucionConvenios: ProgramaInstitucionConvenio[];
+  @OneToMany(() => ProgramaInstitucionConvenio, (table) => table.agreement)
+  programInstitutionAgreements: ProgramaInstitucionConvenio[];
 }

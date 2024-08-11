@@ -29,13 +29,10 @@ export class Institucion {
   @JoinColumn({ name: "contact_id" })
   contact: Contacto;
 
-  @OneToMany(
-    () => ProgramaInstitucion,
-    (programaInstitucion) => programaInstitucion.programa
-  )
-  programaInstituciones: ProgramaInstitucion[];
+  @OneToMany(() => ProgramaInstitucion, (table) => table.program)
+  programInstitutions: ProgramaInstitucion[];
 
-  @ManyToOne(() => Ciudad, (city) => city.institucion)
+  @ManyToOne(() => Ciudad, (table) => table.institucion)
   @JoinColumn({ name: "city_id" })
   city: Ciudad;
 }

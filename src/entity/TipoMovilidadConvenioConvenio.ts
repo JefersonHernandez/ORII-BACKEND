@@ -1,4 +1,10 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Convenio } from "./Convenio";
 import { TipoMovilidadConvenio } from "./TipoMovilidadConvenio";
 
@@ -7,15 +13,20 @@ export class TipoMovilidadConvenioConvenio {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  convenio_id: number;
+
+  @Column()
+  tipo_movilidad_convenio_id: number;
+
   @ManyToOne(
     () => TipoMovilidadConvenio,
-    (tipoMovilidadConvenio) =>
-      tipoMovilidadConvenio.tipoMovilidadConvenioConvenios
+    (table) => table.tipoMovilidadConvenioConvenios
   )
   @JoinColumn({ name: "tipo_movilidad_convenio_id" })
   tipoMovilidadConvenio: TipoMovilidadConvenio;
 
-  @ManyToOne(() => Convenio, (convenio) => convenio.id)
+  @ManyToOne(() => Convenio, (table) => table.id)
   @JoinColumn({ name: "convenio_id" })
   convenio: Convenio;
 }

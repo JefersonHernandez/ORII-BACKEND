@@ -12,8 +12,8 @@ export class ProgramaInstitucionConvenioController {
     try {
       const data = await repository.find({
         relations: {
-          convenio: true,
-          programaInstitucion: true,
+          agreement: true,
+          programInstitution: true,
         },
       });
 

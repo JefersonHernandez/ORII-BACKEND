@@ -6,7 +6,7 @@ export class TipoConvenioController {
   static readonly getTipoConvenios = async (_: Request, res: Response) => {
     const repository = AppDataSource.getRepository(TipoConvenio);
 
-    const data = await repository.find({ select: ["id", "nombre"] });
+    const data = await repository.find({ select: ["id", "name"] });
     return res.status(200).json(data);
   };
 
@@ -27,7 +27,7 @@ export class TipoConvenioController {
 
     try {
       const newItem = repository.create({
-        nombre,
+        name: nombre,
       });
 
       await repository.save(newItem);

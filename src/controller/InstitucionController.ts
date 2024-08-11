@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Not } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Institucion } from "../entity/Institucion";
+import { Parameters } from "../entity/Parameters";
 
 const UFPS = 23;
 
@@ -11,7 +12,7 @@ export class InstitucionController {
 
     const data = await repository.find({
       relations: {
-        programaInstituciones: true,
+        programInstitutions: true,
         contact: true,
       },
     });
@@ -25,7 +26,7 @@ export class InstitucionController {
     const data = await repository.findOne({
       where: { id: Number(id) },
       relations: {
-        programaInstituciones: true,
+        programInstitutions: true,
         contact: true,
         city: true,
       },
@@ -59,14 +60,17 @@ export class InstitucionController {
     res: Response
   ) => {
     const repository = AppDataSource.getRepository(Institucion);
+    const parameterRepository = AppDataSource.getRepository(Parameters);
+
+    const parameter = await parameterRepository.find();
 
     const data = await repository.find({
       relations: {
         contact: true,
-        programaInstituciones: true,
+        programInstitutions: true,
       },
       where: {
-        id: Not(UFPS),
+        id: Not(parameter[0].ufps_institution_id),
       },
     });
     return res.status(200).json(data);

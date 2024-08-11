@@ -39,7 +39,8 @@ export const AppDataSource = new DataSource({
   password: config.MYSQL.PASSWORD,
   database: config.MYSQL.DATABASE,
   synchronize: false,
-  logging: false,
+  logging: true,
+
   entities: [
     User,
     Facultad,

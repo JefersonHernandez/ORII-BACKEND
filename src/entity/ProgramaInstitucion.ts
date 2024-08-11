@@ -16,26 +16,22 @@ export abstract class ProgramaInstitucion {
   id: number;
 
   @Column()
-  institucion_id: number;
+  instititution_id: number;
 
   @Column()
-  programa_id: number;
+  program_id: number;
 
   @OneToMany(
     () => ProgramaInstitucionConvenio,
-    (programaInstitucionConvenio) =>
-      programaInstitucionConvenio.programaInstitucion
+    (table) => table.programInstitution
   )
-  programaInstitucionConvenios: ProgramaInstitucionConvenio[];
+  programInstitutionAgreements: ProgramaInstitucionConvenio[];
 
-  @ManyToOne(() => Programa, (programa) => programa.instituciones)
-  @JoinColumn({ name: "programa_id" })
-  programa: Programa;
+  @ManyToOne(() => Programa, (table) => table.instituciones)
+  @JoinColumn({ name: "program_id" })
+  program: Programa;
 
-  @ManyToOne(
-    () => Institucion,
-    (institucion) => institucion.programaInstituciones
-  )
-  @JoinColumn({ name: "institucion_id" })
-  institucion: Institucion;
+  @ManyToOne(() => Institucion, (table) => table.programInstitutions)
+  @JoinColumn({ name: "instititution_id" })
+  institution: Institucion;
 }

@@ -14,19 +14,19 @@ export class ProgramaInstitucionConvenio {
   id: number;
 
   @Column()
-  convenio_id: number;
+  agreement_id: number;
 
   @Column()
-  programa_institucion_id: number;
+  program_institution_id: number;
+
+  @ManyToOne(() => Convenio, (table) => table.programInstitutionAgreements)
+  @JoinColumn({ name: "agreement_id" })
+  agreement: Convenio;
 
   @ManyToOne(
-    () => Convenio,
-    (convenio) => convenio.programaInstitucionConvenios
+    () => ProgramaInstitucion,
+    (table) => table.programInstitutionAgreements
   )
-  @JoinColumn({ name: "convenio_id" })
-  convenio: Convenio;
-
-  @ManyToOne(() => ProgramaInstitucion, (programa) => programa.programa)
-  @JoinColumn({ name: "programa_institucion_id" })
-  programaInstitucion: ProgramaInstitucion;
+  @JoinColumn({ name: "program_institution_id" })
+  programInstitution: ProgramaInstitucion;
 }

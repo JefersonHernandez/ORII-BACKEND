@@ -7,8 +7,8 @@ export class TipoConvenio {
   id: number;
 
   @Column()
-  nombre: string;
+  name: string;
 
-  @OneToMany(() => Convenio, (convenio) => convenio.id)
-  convenios: Convenio[];
+  @OneToMany(() => Convenio, (agreement) => agreement.id)
+  agreements: Convenio[];
 }

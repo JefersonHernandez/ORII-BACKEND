@@ -20,13 +20,10 @@ export class Programa {
   @Column()
   facultadId: number;
 
-  @ManyToOne(() => Facultad, (facultad) => facultad.programas)
+  @ManyToOne(() => Facultad, (table) => table.programas)
   @JoinColumn({ name: "facultadId" })
   facultad: Facultad;
 
-  @OneToMany(
-    () => ProgramaInstitucion,
-    (programaInstitucion) => programaInstitucion.programa
-  )
+  @OneToMany(() => ProgramaInstitucion, (table) => table.program)
   instituciones: ProgramaInstitucion[];
 }

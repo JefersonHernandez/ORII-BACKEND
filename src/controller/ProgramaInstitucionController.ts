@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { In } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { ProgramaInstitucion } from "../entity/ProgramaInstitucion";
 
@@ -13,26 +12,28 @@ export class ProgramaInstitucionController {
     try {
       const data = await repository.find({
         relations: {
-          programa: true,
-          institucion: true,
+          program: true,
+          institution: true,
         },
       });
 
       res.json(
-        data.map(({ programa, institucion, ...rest }) => ({
-          ...rest,
-          program: {
-            id: programa.id,
-            name: programa.name,
-            faculty_id: programa.facultadId,
-          },
-          institution: {
-            id: institucion.id,
-            name: institucion.name,
-            contact_id: institucion.contact_id,
-            city_id: institucion.city_id,
-          },
-        }))
+        data.map(
+          ({ program: programa, institution: institucion, ...rest }) => ({
+            ...rest,
+            program: {
+              id: programa.id,
+              name: programa.name,
+              faculty_id: programa.facultadId,
+            },
+            institution: {
+              id: institucion.id,
+              name: institucion.name,
+              contact_id: institucion.contact_id,
+              city_id: institucion.city_id,
+            },
+          })
+        )
       );
     } catch (error) {
       res.status(404).json({
@@ -49,12 +50,16 @@ export class ProgramaInstitucionController {
 
     try {
       const { id } = req.params;
-      const { programa, institucion, ...rest } = await repository.findOne({
+      const {
+        program: programa,
+        institution: institucion,
+        ...rest
+      } = await repository.findOne({
         where: { id: Number(id) },
         relations: {
-          programa: true,
-          institucion: true,
-          programaInstitucionConvenios: true,
+          program: true,
+          institution: true,
+          programInstitutionAgreements: true,
         },
       });
 
@@ -89,31 +94,35 @@ export class ProgramaInstitucionController {
     try {
       const items = await repository.find({
         relations: {
-          institucion: true,
-          programa: true,
+          institution: true,
+          program: true,
         },
-        where: { institucion_id: Number(id) },
+        where: { instititution_id: Number(id) },
       });
 
       const groupedByInstitucion = items.reduce((acc, item) => {
         // Asegúrate de que la institución existe en el acumulador
-        if (!acc[item.institucion.id]) {
-          acc[item.institucion.id] = {
-            institucion: item.institucion,
-            programas: [],
+        if (!acc[item.institution.id]) {
+          acc[item.institution.id] = {
+            institution: item.institution,
+            programs: [],
           };
         }
 
         // Añadir el programa a la institución correcta
-        acc[item.institucion.id].programas.push(item.programa);
+        acc[item.institution.id].programs.push({
+          ...item.program,
+          faculty_id: item.program.facultadId,
+          id_intermediate: item.id,
+        });
 
         return acc;
-      }, {} as Record<number, { institucion: any; programas: any[] }>);
+      }, {} as Record<number, { institution: any; programs: any[] }>);
 
       // Convertir el resultado a un array si lo prefieres
       const groupedArray = Object.values(groupedByInstitucion);
 
-      res.send(groupedArray);
+      res.send(groupedArray[0]);
     } catch (error) {
       res.status(404).json({
         message: "Sin resultados",
@@ -139,8 +148,8 @@ export class ProgramaInstitucionController {
       await AppDataSource.transaction(async (transactionalEntityManager) => {
         for await (const iterator of items) {
           const newInstitucion = repository.create({
-            institucion_id: iterator.institucion_id,
-            programa_id: iterator.programa_id,
+            instititution_id: iterator.institucion_id,
+            program_id: iterator.programa_id,
           });
           await transactionalEntityManager.save(newInstitucion);
         }
@@ -167,57 +176,95 @@ export class ProgramaInstitucionController {
 
     try {
       const institution = await repository.findOneBy({
-        institucion_id: parseInt(institution_id, 10),
+        instititution_id: Number(institution_id),
       });
 
       if (!institution) {
         return res.status(404).json({ error: "Institution not found" });
       }
 
-      const newProgramIds = program_id;
+      const newProgramIds = program_id.map((program) => Number(program));
       const newInstitutionId = institution_id;
 
       const existingAssociations = await repository.find({
-        where: { institucion_id: newInstitutionId },
+        where: { instititution_id: Number(newInstitutionId) },
       });
 
-      const currentProgramIds = existingAssociations.map(
-        (assoc) => assoc.programa_id
-      );
-      const idsToRemove = currentProgramIds.filter(
-        (id) => !newProgramIds.includes(id)
-      );
+      // const currentProgramIds = existingAssociations.map(
+      //   (assoc) => assoc.program_id
+      // );
+      // const idsToRemove = currentProgramIds.filter(
+      //   (id) => !newProgramIds.includes(id)
+      // );
 
       await AppDataSource.transaction(async (transactionalEntityManager) => {
-        if (idsToRemove.length > 0) {
-          await repository.delete({
-            programa_id: In(idsToRemove),
-            institucion_id: newInstitutionId,
-          });
-          await transactionalEntityManager.delete(
+        const existingAssociationsIds = existingAssociations.map(
+          (assoc) => assoc.program_id
+        );
+        console.log("existingAssociationsIds", existingAssociationsIds);
+
+        const prev = newProgramIds.filter((el) =>
+          existingAssociationsIds.includes(el)
+        );
+        console.log("prev", prev);
+
+        const areNew = newProgramIds.filter(
+          (el) => !existingAssociationsIds.includes(el)
+        );
+
+        const toDelete = existingAssociationsIds.filter(
+          (el) => !prev.includes(el)
+        );
+        console.log("toDelete", toDelete);
+
+        if (toDelete.length > 0) {
+          const r = await transactionalEntityManager.delete(
             ProgramaInstitucion,
-            idsToRemove
+            existingAssociations
+              .filter((item) => toDelete.includes(item.program_id))
+              .map((item) => item.id)
           );
+          console.log("r", r);
         }
 
-        for (const programId of newProgramIds) {
-          const existingAssociation = existingAssociations.find(
-            (assoc) => assoc.programa_id === programId
-          );
+        await transactionalEntityManager.save(
+          areNew
+            .map((item) => ({
+              program_id: item,
+              instititution_id: newInstitutionId,
+            }))
+            .map((data) => repository.create(data))
+        );
 
-          if (existingAssociation) {
-            // Actualiza la asociación existente
-            existingAssociation.programa_id = programId;
-            await transactionalEntityManager.save(existingAssociation);
-          } else {
-            // Crea una nueva asociación
-            const newAssociation = repository.create({
-              institucion_id: newInstitutionId,
-              programa_id: programId,
-            });
-            await transactionalEntityManager.save(newAssociation);
-          }
-        }
+        // if (idsToRemove.length > 0) {
+        //   await repository.delete({
+        //     program_id: In(idsToRemove),
+        //     instititution_id: newInstitutionId,
+        //   });
+        //   await transactionalEntityManager.delete(
+        //     ProgramaInstitucion,
+        //     idsToRemove
+        //   );
+        // }
+
+        // for (const programId of newProgramIds) {
+        //   const existingAssociation = existingAssociations.find(
+        //     (assoc) => assoc.program_id === programId
+        //   );
+
+        //   if (existingAssociation) {
+        //     // Actualiza la asociación existente
+        //     existingAssociation.program_id = programId;
+        //     await transactionalEntityManager.save(existingAssociation);
+        //   } else {
+        //     // Crea una nueva asociación
+        //     const newAssociation = repository.create({
+        //       instititution_id: newInstitutionId,
+        //       program_id: programId,
+        //     });
+        //     await transactionalEntityManager.save(newAssociation);
+        //   }
+        // }
 
         // const response = await transactionalEntityManager.save(newConvenio);
 
@@ -264,24 +311,24 @@ export class ProgramaInstitucionController {
     try {
       const items = await repository.find({
         relations: {
-          institucion: true,
-          programa: true,
+          institution: true,
+          program: true,
         },
       });
 
       const groupedByInstitucion = items.reduce((acc, item) => {
         // Asegúrate de que la institución existe en el acumulador
-        if (!acc[item.institucion.id]) {
-          acc[item.institucion.id] = {
-            institution: item.institucion,
+        if (!acc[item.institution.id]) {
+          acc[item.institution.id] = {
+            institution: item.institution,
             programs: [],
           };
         }
 
-        const { facultadId, ...rest } = item.programa;
+        const { facultadId, ...rest } = item.program;
 
         // Añadir el programa a la institución correcta
-        acc[item.institucion.id].programs.push({
+        acc[item.institution.id].programs.push({
           ...rest,
           faculty_id: facultadId,
         });
@@ -311,25 +358,25 @@ export class ProgramaInstitucionController {
     try {
       const items = await repository.find({
         relations: {
-          institucion: true,
-          programa: true,
+          institution: true,
+          program: true,
         },
-        where: { institucion_id: Number(id) },
+        where: { instititution_id: Number(id) },
       });
 
       const groupedByInstitucion = items.reduce((acc, item) => {
         // Asegúrate de que la institución existe en el acumulador
-        if (!acc[item.institucion.id]) {
-          acc[item.institucion.id] = {
-            institution: item.institucion,
+        if (!acc[item.institution.id]) {
+          acc[item.institution.id] = {
+            institution: item.institution,
             programs: [],
           };
         }
 
-        const { facultadId, ...rest } = item.programa;
+        const { facultadId, ...rest } = item.program;
 
         // Añadir el programa a la institución correcta
-        acc[item.institucion.id].programs.push({
+        acc[item.institution.id].programs.push({
           ...rest,
           faculty_id: facultadId,
         });
