@@ -8,7 +8,22 @@ export class ConvenioController {
   static readonly getAgreements = async (_: Request, res: Response) => {
     const repository = AppDataSource.getRepository(Convenio);
 
-    const data = await repository.find();
+    const data = await repository.find({
+      relations: {
+        agreementType: true,
+        programInstitutionAgreements: {
+          programInstitution: {
+            program: true,
+            institution: {
+              contact: true,
+            },
+          },
+        },
+        tipoMovilidadConvenioConvenios: {
+          tipoMovilidadConvenio: true,
+        },
+      },
+    });
 
     return res.status(200).json(data);
   };
@@ -26,7 +41,9 @@ export class ConvenioController {
         programInstitutionAgreements: {
           programInstitution: true,
         },
-        tipoMovilidadConvenioConvenios: true,
+        tipoMovilidadConvenioConvenios: {
+          tipoMovilidadConvenio: true,
+        },
       },
       loadEagerRelations: true,
     });

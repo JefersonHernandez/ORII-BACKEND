@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Between } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { MovilidadActor } from "../entity/MovilidadActor";
 
@@ -150,9 +149,9 @@ export class MovilidadController {
         relations: {
           actor: true,
         },
-        where: {
-          createdAt: Between(fechaInicial, fechaFinal),
-        },
+        // where: {
+        //   createdAt: Between(fechaInicial, fechaFinal),
+        // },
         order: {
           createdAt: "DESC",
         },

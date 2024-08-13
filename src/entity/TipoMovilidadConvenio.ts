@@ -11,8 +11,7 @@ export class TipoMovilidadConvenio {
 
   @OneToMany(
     () => TipoMovilidadConvenioConvenio,
-    (tipoMovilidadConvenioConvenio) =>
-      tipoMovilidadConvenioConvenio.tipoMovilidadConvenio
+    (table) => table.tipoMovilidadConvenio
   )
   tipoMovilidadConvenioConvenios: TipoMovilidadConvenioConvenio[];
 }
