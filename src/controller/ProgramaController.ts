@@ -3,6 +3,27 @@ import { AppDataSource } from "../data-source";
 import { Programa } from "../entity/Programa";
 
 export class ProgramaController {
+  static readonly getProgramsByFaculty = async (
+    req: Request,
+    res: Response
+  ) => {
+    const programaRepository = AppDataSource.getRepository(Programa);
+    try {
+      const data = await programaRepository.find({
+        where: {
+          faculty_id: Number(req.params.id),
+        },
+      });
+
+      res.send(data);
+    } catch (error) {
+      res.status(404).json({
+        message: "Sin resultados",
+        error,
+      });
+    }
+  };
+
   static readonly getAllDataOfPrograms = async (
     req: Request,
     res: Response
@@ -11,18 +32,7 @@ export class ProgramaController {
     try {
       const data = await programaRepository.find();
 
-      if (data) {
-        res.send(
-          data.map(({ facultadId, ...rest }) => ({
-            ...rest,
-            faculty_id: facultadId,
-          }))
-        );
-      } else {
-        res.status(404).json({
-          message: "Facultad no encontrada",
-        });
-      }
+      res.send(data);
     } catch (error) {
       res.status(404).json({
         message: "Sin resultados",
@@ -41,7 +51,7 @@ export class ProgramaController {
           facultad: true,
         },
         where: {
-          facultadId: Number(id),
+          faculty_id: Number(id),
         },
       });
 
@@ -65,13 +75,13 @@ export class ProgramaController {
 
     const programaRepository = AppDataSource.getRepository(Programa);
     try {
-      const { facultadId, ...rest } = await programaRepository.findOne({
+      const data = await programaRepository.findOne({
         where: {
           id: Number(id),
         },
       });
 
-      res.send({ ...rest, faculty_id: facultadId });
+      res.send(data);
     } catch (error) {
       res.status(404).json({
         message: "Program not found",
@@ -88,7 +98,7 @@ export class ProgramaController {
     try {
       const program = repository.create({
         name,
-        facultadId: faculty_id,
+        faculty_id,
       });
 
       await repository.save(program);
@@ -114,7 +124,7 @@ export class ProgramaController {
       }
 
       program.name = name;
-      program.facultadId = faculty_id;
+      program.faculty_id = faculty_id;
 
       await repository.save(program);
 

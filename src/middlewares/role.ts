@@ -1,28 +1,28 @@
-import { Request, Response, NextFunction } from "express";
-import { User } from "../entity/User";
+import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../data-source";
+import { User } from "../entity/User";
 
 export const checkRole = (roles: Array<string>) => {
-  return async (req_Request, res: Response, next: NextFunction) => {
-    const { userId } = res.locals.jwtPayload;
-    const userRepository = AppDataSource.getRepository(User);
-    let user: User;
-
+  return async (_: Request, res: Response, next: NextFunction) => {
     try {
+      const { userId } = res.locals.jwtPayload;
+
+      const userRepository = AppDataSource.getRepository(User);
+
+      let user: User;
+
       user = await userRepository.findOneOrFail({ where: { id: userId } });
+
+      const { role } = user;
+
+      if (!roles.includes(role)) {
+        throw new Error("Unauthorized role for the operation!");
+      }
+
+      next();
     } catch (error) {
       res.status(401).json({
-        message: "Error ubicando usuario",
-      });
-    }
-
-    const { role } = user;
-
-    if (roles.includes(role)) {
-      next();
-    } else {
-      res.status(401).json({
-        message: "Rol no autorizado para la operacion!",
+        message: error.message,
       });
     }
   };

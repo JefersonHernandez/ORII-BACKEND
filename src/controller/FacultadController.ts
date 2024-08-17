@@ -5,15 +5,16 @@ import { Facultad } from "../entity/Facultad";
 export class FacultadController {
   static getDataFacultadById = async (req: Request, res: Response) => {
     const { id } = req.params;
-    let idNum = parseInt(id);
+
     const facultadRepository = AppDataSource.getRepository(Facultad);
+
     try {
       const { programas, nombre, ...rest } = await facultadRepository.findOne({
         relations: {
           programas: true,
         },
         where: {
-          id: idNum,
+          id: Number(id),
         },
       });
 

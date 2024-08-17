@@ -18,10 +18,10 @@ export class Programa {
   name: string;
 
   @Column()
-  facultadId: number;
+  faculty_id: number;
 
   @ManyToOne(() => Facultad, (table) => table.programas)
-  @JoinColumn({ name: "facultadId" })
+  @JoinColumn({ name: "faculty_id" })
   facultad: Facultad;
 
   @OneToMany(() => ProgramaInstitucion, (table) => table.program)

@@ -9,6 +9,6 @@ export class Facultad {
   @Column()
   nombre: string;
 
-  @OneToMany(() => Programa, (programa) => programa.facultad)
+  @OneToMany(() => Programa, (table) => table.facultad)
   programas: Programa[];
 }
