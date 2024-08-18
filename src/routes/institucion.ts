@@ -1,13 +1,38 @@
 import { Router } from "express";
 import { InstitucionController } from "../controller/InstitucionController";
+import { checkJwt } from "../middlewares/JWT";
+import { checkRole } from "../middlewares/role";
 
 const router = Router();
 
-router.get("/", InstitucionController.getInstitutions);
-router.get("/convenios", InstitucionController.getInstitucionesForConvenios);
+router.get(
+  "/",
+  [checkJwt, checkRole(["admin"])],
+  InstitucionController.getInstitutions
+);
 
-router.post("/", InstitucionController.createInstitution);
-router.get("/:id", InstitucionController.getInstitution);
-router.put("/:id", InstitucionController.updateInstitution);
+router.get(
+  "/convenios",
+  [checkJwt, checkRole(["admin"])],
+  InstitucionController.getInstitucionesForConvenios
+);
+
+router.post(
+  "/",
+  [checkJwt, checkRole(["admin"])],
+  InstitucionController.createInstitution
+);
+
+router.get(
+  "/:id",
+  [checkJwt, checkRole(["admin"])],
+  InstitucionController.getInstitution
+);
+
+router.put(
+  "/:id",
+  [checkJwt, checkRole(["admin"])],
+  InstitucionController.updateInstitution
+);
 
 export default router;

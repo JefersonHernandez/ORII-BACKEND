@@ -14,7 +14,7 @@ router.get("/:id", [checkJwt, checkRole(["admin"])], UserController.getById);
 
 //crear nuevo usuario
 
-router.post("/", UserController.newUser);
+router.post("/", [checkJwt, checkRole(["admin"])], UserController.newUser);
 
 //editar usuario
 

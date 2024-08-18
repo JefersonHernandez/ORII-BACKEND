@@ -1,10 +1,20 @@
 import { Router } from "express";
 import { FacultadController } from "../controller/FacultadController";
+import { checkJwt } from "../middlewares/JWT";
+import { checkRole } from "../middlewares/role";
 
 const router = Router();
 
-router.get("/:id", FacultadController.getDataFacultadById);
+router.get(
+  "/:id",
+  [checkJwt, checkRole(["admin"])],
+  FacultadController.getDataFacultadById
+);
 
-router.get("/", FacultadController.getAllDataOfFacultad);
+router.get(
+  "/",
+  [checkJwt, checkRole(["admin"])],
+  FacultadController.getAllDataOfFacultad
+);
 
 export default router;

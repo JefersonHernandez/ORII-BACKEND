@@ -1,12 +1,37 @@
 import { Router } from "express";
 import { ConvenioController } from "../controller/ConvenioController";
+import { checkJwt } from "../middlewares/JWT";
+import { checkRole } from "../middlewares/role";
 
 const router = Router();
 
-router.get("/", ConvenioController.getAgreements);
-router.get("/summary", ConvenioController.getAgreementsData);
-router.post("/", ConvenioController.createAgreement);
-router.get("/:id", ConvenioController.getAgreement);
-router.put("/:id", ConvenioController.updateAgreement);
+router.get(
+  "/",
+  [checkJwt, checkRole(["admin"])],
+  ConvenioController.getAgreements
+);
+
+router.get(
+  "/summary",
+  [checkJwt, checkRole(["admin"])],
+  ConvenioController.getAgreementsData
+);
+router.post(
+  "/",
+  [checkJwt, checkRole(["admin"])],
+  ConvenioController.createAgreement
+);
+
+router.get(
+  "/:id",
+  [checkJwt, checkRole(["admin"])],
+  ConvenioController.getAgreement
+);
+
+router.put(
+  "/:id",
+  [checkJwt, checkRole(["admin"])],
+  ConvenioController.updateAgreement
+);
 
 export default router;
