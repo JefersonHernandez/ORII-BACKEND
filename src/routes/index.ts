@@ -15,10 +15,12 @@ import programa from "./programa";
 import programa_institucion from "./programa_institucion";
 import programa_institucion_convenio from "./programa_institucion_convenio";
 import rol_actividad from "./rol_actividad";
+import roles from "./roles";
 import tipo_convenio from "./tipo_convenio";
 import tipo_movilidad_convenio from "./tipo_movilidad_convenio";
 import tipo_movilidad_convenio_convenio from "./tipo_movilidad_convenio_convenio";
 import user from "./user";
+import user_roles from "./user_roles";
 
 const routes = Router();
 
@@ -60,5 +62,7 @@ routes.use("/institutions", institucion);
 routes.use("/agreement-countries", pais);
 routes.use("/cities", ciudad);
 routes.use("/contacts", contacto);
+routes.use("/roles", roles);
+routes.use("/user_roles", user_roles);
 
 export default routes;

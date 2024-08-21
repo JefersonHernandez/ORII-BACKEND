@@ -10,7 +10,11 @@ router.get("/", [checkJwt, checkRole(["admin"])], UserController.getAll);
 
 //Obtener un usuario en especifico
 
-router.get("/:id", [checkJwt, checkRole(["admin"])], UserController.getById);
+router.get(
+  "/:id",
+  [checkJwt, checkRole(["admin", "user"])],
+  UserController.getById
+);
 
 //crear nuevo usuario
 

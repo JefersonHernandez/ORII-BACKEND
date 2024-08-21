@@ -23,6 +23,7 @@ import { ProgramaInstitucion } from "./entity/ProgramaInstitucion";
 import { ProgramaInstitucionConvenio } from "./entity/ProgramaInstitucionConvenio";
 import { Rol } from "./entity/Rol";
 import { RolActividad } from "./entity/RolActividad";
+import { Roles } from "./entity/Roles";
 import { Semester } from "./entity/Semester";
 import { TipoConvenio } from "./entity/TipoConvenio";
 import { TipoDocumento } from "./entity/TipoDocumento";
@@ -30,6 +31,7 @@ import { TipoMovilidad } from "./entity/TipoMovilidad";
 import { TipoMovilidadConvenio } from "./entity/TipoMovilidadConvenio";
 import { TipoMovilidadConvenioConvenio } from "./entity/TipoMovilidadConvenioConvenio";
 import { User } from "./entity/User";
+import { UserRoles } from "./entity/UserRoles";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -73,6 +75,8 @@ export const AppDataSource = new DataSource({
     ProgramaInstitucionConvenio,
     TipoConvenio,
     Parameters,
+    Roles,
+    UserRoles,
   ],
   migrations: [],
   subscribers: [],
