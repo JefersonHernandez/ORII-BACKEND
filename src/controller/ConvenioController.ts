@@ -64,6 +64,7 @@ export class ConvenioController {
       programs,
       institution_id,
       date,
+      validity,
     } = req.body;
 
     const repository = AppDataSource.getRepository(Convenio);
@@ -85,6 +86,7 @@ export class ConvenioController {
           end_date,
           institution_id,
           date,
+          validity,
         });
         const response = await transactionalEntityManager.save(newConvenio);
 
@@ -332,6 +334,7 @@ INNER JOIN tipo_movilidad_convenio tmc ON
       programs,
       institution_id,
       date,
+      validity,
     } = req.body;
 
     const repository = AppDataSource.getRepository(Convenio);
@@ -358,6 +361,7 @@ INNER JOIN tipo_movilidad_convenio tmc ON
         program.end_date = end_date;
         program.institution_id = institution_id;
         program.date = date;
+        program.validity = validity;
 
         const response = await transactionalEntityManager.save(program);
 

@@ -30,7 +30,7 @@ class AuthController {
         { expiresIn: "1h" }
       );
 
-      res.json({ id: user.id, token, role: "staff" });
+      res.json({ id: user.id, token, role: "admin" });
     } catch (error) {
       return res.status(400).json({
         message: error.message,
