@@ -43,9 +43,6 @@ export class Convenio {
   date: Date;
 
   @Column()
-  seccional_cucuta: boolean;
-
-  @Column()
   seccional_ocania: boolean;
 
   @ManyToOne(() => TipoConvenio, (table) => table.agreements)

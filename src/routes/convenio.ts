@@ -11,11 +11,6 @@ router.get(
   ConvenioController.getAgreements
 );
 
-router.get(
-  "/summary",
-  [checkJwt, checkRole(["admin"])],
-  ConvenioController.getAgreementsData
-);
 router.post(
   "/",
   [checkJwt, checkRole(["admin"])],
