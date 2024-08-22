@@ -6,18 +6,18 @@ export abstract class Contacto {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   position: string;
 
   @Column()
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   web_site: string;
 
-  @OneToOne(() => Institucion, (institution) => institution.contact)
+  @OneToOne(() => Institucion, (entity) => entity.contact)
   institution: Institucion;
 }
