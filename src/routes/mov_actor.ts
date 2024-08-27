@@ -18,7 +18,7 @@ router.get(
 );
 
 router.get(
-  "/id/:id",
+  "/:id",
   [checkJwt, checkRole(["admin"])],
   MovilidadController.getDataMovilidadById
 );

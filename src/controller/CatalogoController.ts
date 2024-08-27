@@ -11,6 +11,7 @@ import { Rol } from "../entity/Rol";
 import { Semester } from "../entity/Semester";
 import { TipoDocumento } from "../entity/TipoDocumento";
 import { TipoMovilidad } from "../entity/TipoMovilidad";
+import { VirtualMobilitySource } from "../entity/VirtualMobilitySource";
 
 export class CatalogoController {
   static getAllFuenteFinanciacionNacional = async (
@@ -95,6 +96,15 @@ export class CatalogoController {
 
   static readonly getAllSemesters = async (req: Request, res: Response) => {
     const catalogRepository = AppDataSource.getRepository(Semester);
+
+    const data = await catalogRepository.find({ select: ["id", "nombre"] });
+    return res.status(200).json(data);
+  };
+
+  static readonly getMobilitySources = async (req: Request, res: Response) => {
+    const catalogRepository = AppDataSource.getRepository(
+      VirtualMobilitySource
+    );
 
     const data = await catalogRepository.find({ select: ["id", "nombre"] });
     return res.status(200).json(data);

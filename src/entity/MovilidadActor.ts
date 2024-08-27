@@ -1,9 +1,15 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Actor } from "./Actor";
 
-
 @Entity()
-export class MovilidadActor{
+export class MovilidadActor {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -82,13 +88,11 @@ export class MovilidadActor{
   @Column()
   valor_fin_internacional: number;
 
-
   @Column()
   codigo_actor: number;
 
-  @ManyToOne(()=>Actor, (actor)=>actor.movilidades)
-  @JoinColumn({ name: 'codigo_actor'})
-
+  @ManyToOne(() => Actor, (actor) => actor.movilidades)
+  @JoinColumn({ name: "codigo_actor" })
   actor: Actor;
 
   @Column()
@@ -100,4 +104,7 @@ export class MovilidadActor{
 
   @Column()
   numero_convenio_mov: string;
+
+  @Column()
+  mobility_type_source: string;
 }

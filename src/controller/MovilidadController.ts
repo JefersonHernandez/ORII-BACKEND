@@ -33,6 +33,7 @@ export class MovilidadController {
       codigo_actor,
       rol,
       numero_convenio_mov,
+      mobility_type_source,
     } = req.body;
     const mov = new MovilidadActor();
 
@@ -64,6 +65,7 @@ export class MovilidadController {
     mov.codigo_actor = codigo_actor;
     mov.rol = rol;
     mov.numero_convenio_mov = numero_convenio_mov;
+    mov.mobility_type_source = mobility_type_source;
 
     try {
       const movReporsitory = AppDataSource.getRepository(MovilidadActor);
@@ -114,7 +116,7 @@ export class MovilidadController {
     let idNum = parseInt(id);
     const movilidadReporsitory = AppDataSource.getRepository(MovilidadActor);
     try {
-      const data = await movilidadReporsitory.find({
+      const data = await movilidadReporsitory.findOne({
         relations: {
           actor: true,
         },
@@ -140,8 +142,6 @@ export class MovilidadController {
 
   static getRecentMovility = async (req: Request, res: Response) => {
     const tiempoTranscurrido = Date.now();
-    const fechaFinal = new Date(tiempoTranscurrido);
-    const fechaInicial = new Date(tiempoTranscurrido - 550000000);
 
     const movilidadReporsitory = AppDataSource.getRepository(MovilidadActor);
     try {

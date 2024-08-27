@@ -45,6 +45,9 @@ export class Convenio {
   @Column()
   seccional_ocania: boolean;
 
+  @Column()
+  event_id: string;
+
   @ManyToOne(() => TipoConvenio, (table) => table.agreements)
   @JoinColumn({ name: "type_agreement_id" })
   agreementType: TipoConvenio;

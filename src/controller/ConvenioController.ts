@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Convenio } from "../entity/Convenio";
@@ -46,6 +47,12 @@ export class ConvenioController {
       },
       loadEagerRelations: true,
     });
+    if (data.event_id) {
+      const event = await axios.get(
+        `http://localhost:3000/calendar/events/${data.event_id}`
+      );
+      return res.status(200).json({ ...data, event: event.data });
+    }
     return res.status(200).json(data);
   };
 
@@ -63,11 +70,22 @@ export class ConvenioController {
       institution_id,
       date,
       validity,
+      calendar_event_date_start,
+      calendar_event_date_end,
     } = req.body;
 
     const repository = AppDataSource.getRepository(Convenio);
 
     try {
+      let event = null;
+      if (calendar_event_date_start && calendar_event_date_end) {
+        event = await axios.post("http://localhost:3000/calendar/events", {
+          summary: `Convenio - ${code}`,
+          description: validity,
+          date_start: calendar_event_date_start,
+          date_end: calendar_event_date_end,
+        });
+      }
       const programaInstitucionConvenioRepository = AppDataSource.getRepository(
         ProgramaInstitucionConvenio
       );
@@ -84,6 +102,7 @@ export class ConvenioController {
           institution_id,
           date,
           validity,
+          event_id: event?.data?.id,
         });
         const response = await transactionalEntityManager.save(newConvenio);
 
@@ -126,6 +145,10 @@ export class ConvenioController {
       institution_id,
       date,
       validity,
+      event_id,
+      calendar_event_date_start,
+      calendar_event_date_end,
+      reminder,
     } = req.body;
 
     const repository = AppDataSource.getRepository(Convenio);
@@ -141,6 +164,52 @@ export class ConvenioController {
         return res.status(404).json({ error: "Convenio not found" });
       }
 
+      let event = null;
+
+      if (program.event_id) {
+        await axios
+          .get(`http://localhost:3000/calendar/events/${program.event_id}`)
+          .then((data) => {
+            event = data;
+          });
+
+        if (reminder) {
+          await axios.put(
+            `http://localhost:3000/calendar/events/${program.event_id}`,
+            {
+              summary: `Convenio - ${code}`,
+              description: validity,
+              date_start: calendar_event_date_start,
+              date_end: calendar_event_date_end,
+            }
+          );
+        } else if (!reminder && event?.data !== null) {
+          await axios.delete(
+            `http://localhost:3000/calendar/events/${program.event_id}`
+          );
+          program.event_id = null;
+        } else if (reminder && event === null) {
+          console.log("reminder", reminder);
+
+          await axios.post("http://localhost:3000/calendar/events", {
+            summary: `Convenio - ${code}`,
+            description: validity,
+            date_start: calendar_event_date_start,
+            date_end: calendar_event_date_end,
+          });
+        }
+      } else {
+        event = await axios.post("http://localhost:3000/calendar/events", {
+          summary: `Convenio - ${code}`,
+          description: validity,
+          date_start: calendar_event_date_start,
+          date_end: calendar_event_date_end,
+        });
+        program.event_id = event.data.id;
+      }
+      console.log("event", event);
+      console.log("reminder", reminder);
+
       await AppDataSource.transaction(async (transactionalEntityManager) => {
         program.name = name;
         program.code = code;
@@ -152,6 +221,7 @@ export class ConvenioController {
         program.institution_id = institution_id;
         program.date = date;
         program.validity = validity;
+        // program.event_id = event.data.id;
 
         const response = await transactionalEntityManager.save(program);
 

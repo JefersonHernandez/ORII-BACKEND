@@ -1,11 +1,13 @@
 import { Router } from "express";
 import actor from "./actor";
 import auth from "./auth";
+import calendar from "./calendar";
 import catalog from "./catalog";
 import ciudad from "./ciudad";
 import contacto from "./contacto";
 import convenio from "./convenio";
 import country from "./country";
+import drive from "./drive";
 import facultad from "./facultad";
 import institucion from "./institucion";
 import movilidad_actor from "./mov_actor";
@@ -64,5 +66,7 @@ routes.use("/cities", ciudad);
 routes.use("/contacts", contacto);
 routes.use("/roles", roles);
 routes.use("/user_roles", user_roles);
+routes.use("/calendar", calendar);
+routes.use("/drive", drive);
 
 export default routes;

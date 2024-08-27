@@ -32,6 +32,7 @@ import { TipoMovilidadConvenio } from "./entity/TipoMovilidadConvenio";
 import { TipoMovilidadConvenioConvenio } from "./entity/TipoMovilidadConvenioConvenio";
 import { User } from "./entity/User";
 import { UserRoles } from "./entity/UserRoles";
+import { VirtualMobilitySource } from "./entity/VirtualMobilitySource";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -41,7 +42,7 @@ export const AppDataSource = new DataSource({
   password: config.MYSQL.PASSWORD,
   database: config.MYSQL.DATABASE,
   synchronize: false,
-  logging: true,
+  logging: false,
 
   entities: [
     User,
@@ -77,6 +78,7 @@ export const AppDataSource = new DataSource({
     Parameters,
     Roles,
     UserRoles,
+    VirtualMobilitySource,
   ],
   migrations: [],
   subscribers: [],

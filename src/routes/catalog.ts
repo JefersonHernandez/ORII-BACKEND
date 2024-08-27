@@ -82,4 +82,11 @@ router.get(
   CatalogoController.getAllSemesters
 );
 
+//Obtener catalogo de fuentes de movilidad virtual
+router.get(
+  "/mobility-source",
+  [checkJwt, checkRole(["admin"])],
+  CatalogoController.getMobilitySources
+);
+
 export default router;
