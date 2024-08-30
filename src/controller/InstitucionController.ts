@@ -1,5 +1,6 @@
+import axios from "axios";
 import { Request, Response } from "express";
-import { Not } from "typeorm";
+import { In, Not } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Institucion } from "../entity/Institucion";
 import { Parameters } from "../entity/Parameters";
@@ -100,5 +101,36 @@ export class InstitucionController {
       console.log(error);
       return res.status(500).json({ error: "Error al insertar institucion" });
     }
+  };
+
+  static readonly getInternationalInstitutions = async (
+    req: Request,
+    res: Response
+  ) => {
+    const repository = AppDataSource.getRepository(Institucion);
+    const parameterRepository = AppDataSource.getRepository(Parameters);
+
+    const parameter = await parameterRepository.find();
+
+    const cities = await axios.get(
+      `http://localhost:3000/cities?country_id=${parameter[0].main_country_id}`,
+      {
+        headers: {
+          Authorization: req.headers.authorization,
+        },
+      }
+    );
+
+    const data = await repository.find({
+      // relations: {
+      //   contact: true,
+      //   programInstitutions: true,
+      // },
+      where: {
+        city_id: Not(In(cities.data.map((item) => item.id))),
+      },
+    });
+
+    return res.status(200).json(data);
   };
 }

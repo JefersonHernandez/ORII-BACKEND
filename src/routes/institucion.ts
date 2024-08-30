@@ -6,6 +6,12 @@ import { checkRole } from "../middlewares/role";
 const router = Router();
 
 router.get(
+  "/international",
+  [checkJwt, checkRole(["admin"])],
+  InstitucionController.getInternationalInstitutions
+);
+
+router.get(
   "/",
   [checkJwt, checkRole(["admin"])],
   InstitucionController.getInstitutions

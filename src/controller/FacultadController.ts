@@ -29,6 +29,8 @@ export class FacultadController {
 
   static getAllDataOfFacultad = async (req: Request, res: Response) => {
     const facultadRepository = AppDataSource.getRepository(Facultad);
+    console.log("consulta", req.query);
+
     try {
       const data = await facultadRepository.find({
         relations: {

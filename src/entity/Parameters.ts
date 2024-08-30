@@ -7,4 +7,7 @@ export abstract class Parameters {
 
   @Column()
   ufps_institution_id: number;
+
+  @Column()
+  main_country_id: number;
 }

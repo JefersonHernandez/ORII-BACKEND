@@ -1,12 +1,34 @@
 import axios from "axios";
 import { Request, Response } from "express";
+import { In, Not } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Convenio } from "../entity/Convenio";
 import { ProgramaInstitucionConvenio } from "../entity/ProgramaInstitucionConvenio";
 
 export class ConvenioController {
-  static readonly getAgreements = async (_: Request, res: Response) => {
+  static readonly getAgreements = async (req: Request, res: Response) => {
     const repository = AppDataSource.getRepository(Convenio);
+
+    console.log("req.query", req.query);
+
+    const { source, faculty } = req.query;
+
+    let internationalInstitutionsIds: number[] = [];
+    let facultyIds: number[] = [];
+
+    if (source) {
+      internationalInstitutionsIds = await axios
+        .get("http://localhost:3000/institutions/international", {
+          headers: {
+            Authorization: req.headers.authorization,
+          },
+        })
+        .then((data) => data.data.map((item) => item.id));
+    }
+
+    if (faculty) {
+      facultyIds = (faculty as string).split(",").map((item) => Number(item));
+    }
 
     const data = await repository.find({
       relations: {
@@ -22,6 +44,25 @@ export class ConvenioController {
         tipoMovilidadConvenioConvenios: {
           tipoMovilidadConvenio: true,
         },
+      },
+      where: {
+        ...(source && {
+          ...(source === "international" && {
+            institution_id: In(internationalInstitutionsIds),
+          }),
+          ...(source === "national" && {
+            institution_id: Not(In(internationalInstitutionsIds)),
+          }),
+        }),
+        ...(faculty && {
+          programInstitutionAgreements: {
+            programInstitution: {
+              program: {
+                faculty_id: In(facultyIds),
+              },
+            },
+          },
+        }),
       },
     });
 
