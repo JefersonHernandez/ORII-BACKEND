@@ -1,4 +1,7 @@
+import axios from "axios";
+import { endOfYear, startOfYear } from "date-fns";
 import { Request, Response } from "express";
+import { Between } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { MovilidadActor } from "../entity/MovilidadActor";
 
@@ -141,7 +144,57 @@ export class MovilidadController {
   };
 
   static getRecentMovility = async (req: Request, res: Response) => {
-    const tiempoTranscurrido = Date.now();
+    const { start_date, end_date, mobility_class, mobility_type, actor } =
+      req.query;
+
+    const timezoneOffset: number = Number(req.headers["x-timezone-offset"]);
+
+    const startDate = new Date();
+    const endDate = new Date();
+
+    startDate.setFullYear(Number(start_date));
+    endDate.setFullYear(Number(end_date));
+
+    let mobility_classes: { id: number; nombre: string }[] = [];
+    let mobility_types: { id: number; nombre: string }[] = [];
+    let actors: { id: number; nombre: string }[] = [];
+
+    const adjustedStartDate = start_date
+      ? adjustDateByOffset(startOfYear(startDate), timezoneOffset)
+      : undefined;
+    const adjustedEndDate = end_date
+      ? adjustDateByOffset(endOfYear(endDate), timezoneOffset)
+      : undefined;
+
+    if (mobility_class) {
+      mobility_classes = await axios
+        .get("http://localhost:3000/catalog/mobility-mode", {
+          headers: {
+            Authorization: req.headers.authorization,
+          },
+        })
+        .then((data) => data.data);
+    }
+
+    if (mobility_type) {
+      mobility_types = await axios
+        .get("http://localhost:3000/catalog/mobility-type", {
+          headers: {
+            Authorization: req.headers.authorization,
+          },
+        })
+        .then((data) => data.data);
+    }
+
+    if (actor) {
+      actors = await axios
+        .get("http://localhost:3000/catalog/rol", {
+          headers: {
+            Authorization: req.headers.authorization,
+          },
+        })
+        .then((data) => data.data);
+    }
 
     const movilidadReporsitory = AppDataSource.getRepository(MovilidadActor);
     try {
@@ -149,11 +202,24 @@ export class MovilidadController {
         relations: {
           actor: true,
         },
-        // where: {
-        //   createdAt: Between(fechaInicial, fechaFinal),
-        // },
-        order: {
-          createdAt: "DESC",
+        where: {
+          ...(adjustedStartDate &&
+            adjustedEndDate && {
+              anio_mov: Between(adjustedStartDate, adjustedEndDate),
+            }),
+          ...(mobility_class && {
+            clase_mov: mobility_classes.find(
+              (item) => item.id === Number(mobility_class)
+            ).nombre,
+          }),
+          ...(mobility_type && {
+            tipo_mov: mobility_types.find(
+              (item) => item.id === Number(mobility_type)
+            ).nombre,
+          }),
+          ...(actor && {
+            rol: actors.find((item) => item.id === Number(actor)).nombre,
+          }),
         },
       });
 
@@ -199,3 +265,9 @@ export class MovilidadController {
     }
   };
 }
+
+const adjustDateByOffset = (date: Date, offset: number): Date => {
+  // Offset en minutos
+  const offsetInMilliseconds = offset * 60 * 1000;
+  return new Date(date.getTime() - offsetInMilliseconds);
+};

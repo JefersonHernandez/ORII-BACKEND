@@ -9,12 +9,11 @@ export class ConvenioController {
   static readonly getAgreements = async (req: Request, res: Response) => {
     const repository = AppDataSource.getRepository(Convenio);
 
-    console.log("req.query", req.query);
-
-    const { source, faculty } = req.query;
+    const { source, faculty, mobility_types } = req.query;
 
     let internationalInstitutionsIds: number[] = [];
     let facultyIds: number[] = [];
+    let mobilityTypesIds: number[] = [];
 
     if (source) {
       internationalInstitutionsIds = await axios
@@ -28,6 +27,12 @@ export class ConvenioController {
 
     if (faculty) {
       facultyIds = (faculty as string).split(",").map((item) => Number(item));
+    }
+
+    if (mobility_types) {
+      mobilityTypesIds = (mobility_types as string)
+        .split(",")
+        .map((item) => Number(item));
     }
 
     const data = await repository.find({
@@ -61,6 +66,11 @@ export class ConvenioController {
                 faculty_id: In(facultyIds),
               },
             },
+          },
+        }),
+        ...(mobility_types && {
+          tipoMovilidadConvenioConvenios: {
+            tipo_movilidad_convenio_id: In(mobilityTypesIds),
           },
         }),
       },

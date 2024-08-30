@@ -122,10 +122,6 @@ export class InstitucionController {
     );
 
     const data = await repository.find({
-      // relations: {
-      //   contact: true,
-      //   programInstitutions: true,
-      // },
       where: {
         city_id: Not(In(cities.data.map((item) => item.id))),
       },
