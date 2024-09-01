@@ -14,5 +14,10 @@ router.get(
 );
 
 router.post("/", [checkJwt, checkRole(["admin"])], ActorController.newActor);
+router.put(
+  "/:codigo",
+  [checkJwt, checkRole(["admin"])],
+  ActorController.updateActor
+);
 
 export default router;

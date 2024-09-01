@@ -7,6 +7,7 @@ import { BaseCatalogEntity } from "./entity/BaseCatalogEntity ";
 import { Ciudad } from "./entity/Ciudad";
 import { Contacto } from "./entity/Contacto";
 import { Convenio } from "./entity/Convenio";
+import { Countries } from "./entity/Countries";
 import { EstadoCivil } from "./entity/EstadoCivil";
 import { Facultad } from "./entity/Facultad";
 import { FuenteFinanciacionInternacional } from "./entity/FuenteFinanciacionInternacional";
@@ -42,7 +43,7 @@ export const AppDataSource = new DataSource({
   password: config.MYSQL.PASSWORD,
   database: config.MYSQL.DATABASE,
   synchronize: false,
-  logging: false,
+  logging: true,
 
   entities: [
     User,
@@ -79,6 +80,7 @@ export const AppDataSource = new DataSource({
     Roles,
     UserRoles,
     VirtualMobilitySource,
+    Countries,
   ],
   migrations: [],
   subscribers: [],
