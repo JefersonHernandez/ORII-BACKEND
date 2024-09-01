@@ -4,6 +4,7 @@ import { In, Not } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Convenio } from "../entity/Convenio";
 import { ProgramaInstitucionConvenio } from "../entity/ProgramaInstitucionConvenio";
+import { TipoMovilidadConvenioConvenio } from "../entity/TipoMovilidadConvenioConvenio";
 
 export class ConvenioController {
   static readonly getAgreements = async (req: Request, res: Response) => {
@@ -188,7 +189,6 @@ export class ConvenioController {
       title,
       object,
       type_agreement_id,
-      seccional_cucuta,
       seccional_ocania,
       end_date,
       ufps_programs,
@@ -196,10 +196,10 @@ export class ConvenioController {
       institution_id,
       date,
       validity,
-      event_id,
       calendar_event_date_start,
       calendar_event_date_end,
       reminder,
+      mobility_type,
     } = req.body;
 
     const repository = AppDataSource.getRepository(Convenio);
@@ -208,6 +208,9 @@ export class ConvenioController {
       const programaInstitucionConvenioRepository = AppDataSource.getRepository(
         ProgramaInstitucionConvenio
       );
+
+      const tipoMovilidadConvenioConvenioRepository =
+        AppDataSource.getRepository(TipoMovilidadConvenioConvenio);
 
       const program = await repository.findOneBy({ id: parseInt(id, 10) });
 
@@ -258,8 +261,6 @@ export class ConvenioController {
         });
         program.event_id = event.data.id;
       }
-      console.log("event", event);
-      console.log("reminder", reminder);
 
       await AppDataSource.transaction(async (transactionalEntityManager) => {
         program.name = name;
@@ -272,9 +273,52 @@ export class ConvenioController {
         program.institution_id = institution_id;
         program.date = date;
         program.validity = validity;
-        // program.event_id = event.data.id;
 
         const response = await transactionalEntityManager.save(program);
+
+        const existingAssociationsTipoMovilidadConvenioConvenio =
+          await tipoMovilidadConvenioConvenioRepository.find({
+            where: { convenio_id: Number(id) },
+          });
+
+        const associationsTipoMovilidadConvenioConvenioIds =
+          existingAssociationsTipoMovilidadConvenioConvenio.map(
+            (assoc) => assoc.tipo_movilidad_convenio_id
+          );
+
+        const newTipoMovilidadConvenioConvenioIds = [
+          ...mobility_type.map((itemId: number) => ({
+            convenio_id: id,
+            tipo_movilidad_convenio_id: itemId,
+          })),
+        ];
+
+        // const prevTipoMovilidadConvenioConvenio =
+        //   newTipoMovilidadConvenioConvenioIds.filter((el) =>
+        //     existingAssociationsIds.includes(el.program_institution_id)
+        //   );
+        const areNewTipoMovilidadConvenioConvenio =
+          newTipoMovilidadConvenioConvenioIds.filter(
+            (el) =>
+              !associationsTipoMovilidadConvenioConvenioIds.includes(
+                el.program_institution_id
+              )
+          );
+
+        const currenTipoMovilidadConvenioConvenioIds =
+          existingAssociationsTipoMovilidadConvenioConvenio.map(
+            (assoc) => assoc.tipo_movilidad_convenio_id
+          );
+
+        const tipoMovilidadConvenioConvenioToAdd =
+          newTipoMovilidadConvenioConvenioIds.map(
+            (program) => program.program_institution_id
+          );
+
+        const idsTipoMovilidadConvenioConvenioToRemove =
+          currenTipoMovilidadConvenioConvenioIds.filter(
+            (id) => !tipoMovilidadConvenioConvenioToAdd.includes(id)
+          );
 
         const existingAssociations =
           await programaInstitucionConvenioRepository.find({
@@ -284,8 +328,6 @@ export class ConvenioController {
         const existingAssociationsIds = existingAssociations.map(
           (assoc) => assoc.program_institution_id
         );
-
-        console.log("existingAssociations", existingAssociations);
 
         const newProgramIds = [
           ...programs.map((program_id: number) => ({
@@ -298,44 +340,23 @@ export class ConvenioController {
           })),
         ];
 
-        const prev = newProgramIds.filter((el) =>
-          existingAssociationsIds.includes(el.program_institution_id)
-        );
         const areNew = newProgramIds.filter(
           (el) => !existingAssociationsIds.includes(el.program_institution_id)
         );
-        const toDelete = prev.filter((el) => !areNew.includes(el));
-
-        console.log("prev", prev);
-        console.log("areNew", areNew);
-        console.log("toDelete", toDelete);
 
         const currentProgramIds = existingAssociations.map(
           (assoc) => assoc.program_institution_id
         );
 
-        console.log("currentProgramIds", currentProgramIds);
-
         const programIdsToAdd = newProgramIds.map(
           (program) => program.program_institution_id
         );
-        console.log("programIdsToAdd", programIdsToAdd);
 
         const idsToRemove = currentProgramIds.filter(
           (id) => !programIdsToAdd.includes(id)
         );
-        console.log("idsToRemove", idsToRemove);
-        console.log(
-          "idsToRemove",
-          existingAssociations
-            .filter((item) => idsToRemove.includes(item.program_institution_id))
-            .map((item) => item.id)
-        );
 
         if (idsToRemove.length > 0) {
-          // await programaInstitucionConvenioRepository.delete({
-          //   program_institution_id: In(idsToRemove),
-          // });
           await transactionalEntityManager.delete(
             ProgramaInstitucionConvenio,
             existingAssociations
@@ -346,9 +367,27 @@ export class ConvenioController {
           );
         }
 
+        if (idsTipoMovilidadConvenioConvenioToRemove.length > 0) {
+          await transactionalEntityManager.delete(
+            TipoMovilidadConvenioConvenio,
+            existingAssociationsTipoMovilidadConvenioConvenio
+              .filter((item) =>
+                idsTipoMovilidadConvenioConvenioToRemove.includes(
+                  item.tipo_movilidad_convenio_id
+                )
+              )
+              .map((item) => item.id)
+          );
+        }
+
         await transactionalEntityManager.save(
           areNew.map((data) =>
             programaInstitucionConvenioRepository.create(data)
+          )
+        );
+        await transactionalEntityManager.save(
+          areNewTipoMovilidadConvenioConvenio.map((data) =>
+            tipoMovilidadConvenioConvenioRepository.create(data)
           )
         );
       });

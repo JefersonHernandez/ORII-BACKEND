@@ -5,17 +5,13 @@ import { checkRole } from "../middlewares/role";
 
 const router = Router();
 
-//Obtener los usuarios
-
-//Obtener datos de una facultad especifica
+router.get("/", [checkJwt, checkRole(["admin"])], ActorController.getActors);
 
 router.get(
   "/:codigo",
   [checkJwt, checkRole(["admin"])],
   ActorController.getDataActorByCodigo
 );
-
-//Obtener datos de todas las facultades
 
 router.post("/", [checkJwt, checkRole(["admin"])], ActorController.newActor);
 

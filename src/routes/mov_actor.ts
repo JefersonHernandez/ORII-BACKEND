@@ -35,4 +35,10 @@ router.post(
   MovilidadController.newMovilidad
 );
 
+router.put(
+  "/:id",
+  [checkJwt, checkRole(["admin"])],
+  MovilidadController.updateMovilidad
+);
+
 export default router;
