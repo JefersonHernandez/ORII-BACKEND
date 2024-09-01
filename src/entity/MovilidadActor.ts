@@ -6,7 +6,19 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Actividad } from "./Actividad";
 import { Actor } from "./Actor";
+import { Convenio } from "./Convenio";
+import { Countries } from "./Countries";
+import { Facultad } from "./Facultad";
+import { FuenteFinanciacionInternacional } from "./FuenteFinanciacionInternacional";
+import { FuenteFinanciacionNacional } from "./FuenteFinanciacionNacional";
+import { MobilityApplication } from "./MobilityApplication";
+import { ModalidadMovilidad } from "./ModalidadMovilidad";
+import { Programa } from "./Programa";
+import { Rol } from "./Rol";
+import { Semester } from "./Semester";
+import { TipoMovilidad } from "./TipoMovilidad";
 
 @Entity()
 export class MovilidadActor {
@@ -14,85 +26,85 @@ export class MovilidadActor {
   id: number;
 
   @Column()
-  tipo_mov: string;
+  mobility_type_id: number;
 
   @Column()
-  clase_mov: string;
+  mobility_class_id: number;
 
   @Column()
-  facultad: string;
+  faculty_id: number;
 
   @Column()
-  programa: string;
+  program_id: number;
 
   @Column()
-  anio_mov: Date;
+  year: number;
 
   @Column()
-  semestre_mov: string;
+  semester_id: number;
 
   @Column()
-  actividad_mov: string;
+  activity_id: number;
 
   @Column()
-  descrip_act_mov: string;
+  activity_description: string;
 
   @Column()
-  inst_origen: string;
+  origin_institution: string;
 
   @Column()
-  direccion_origen: string;
+  origin_institution_address: string;
 
   @Column()
-  pais_origen: string;
+  origin_country_id: number;
 
   @Column()
-  depart_origen: string;
+  origin_state: string;
 
   @Column()
-  municipio_origen: string;
+  origin_municipality: string;
 
   @Column()
-  inst_destino: string;
+  institutional_destiny: string;
 
   @Column()
-  direccion_destino: string;
+  institutional_destiny_address: string;
 
   @Column()
-  pais_destino: string;
+  destiny_country_id: number;
 
   @Column()
-  depart_destino: string;
+  destination_state: string;
 
   @Column()
-  municipio_destino: string;
+  destination_municipality: string;
 
   @Column()
-  numero_dias_mov: number;
+  days: number;
 
   @Column()
-  mov_convenio: string;
+  application_id: number;
 
   @Column()
-  fuent_fin_nacional: string;
+  national_financing_id: number;
 
   @Column()
-  valor_fin_nacional: number;
+  national_financing_amount: number;
 
   @Column()
-  fuent_fin_internacional: string;
+  international_financing_id: number;
 
   @Column()
-  pais_fin_internacional: string;
+  financer_country_id: number;
 
   @Column()
-  valor_fin_internacional: number;
+  international_financing_amount: number;
 
   @Column()
-  codigo_actor: number;
+  code: number;
 
   @ManyToOne(() => Actor, (actor) => actor.movilidades)
-  @JoinColumn({ name: "codigo_actor" })
+  @JoinColumn({ name: "code" })
   actor: Actor;
 
   @Column()
@@ -100,11 +112,74 @@ export class MovilidadActor {
   createdAt: Date;
 
   @Column()
-  rol: string;
+  rol_id: number;
 
   @Column()
-  numero_convenio_mov: string;
+  agreement_id: number;
 
   @Column()
-  mobility_type_source: string;
+  mobility_source_id: number;
+
+  @Column()
+  office: string;
+
+  @ManyToOne(() => TipoMovilidad, (table) => table.movilities)
+  @JoinColumn({ name: "mobility_type_id" })
+  movility_type: TipoMovilidad;
+
+  @ManyToOne(() => TipoMovilidad, (table) => table.movilities)
+  @JoinColumn({ name: "mobility_source_id" })
+  mobility_source: TipoMovilidad;
+
+  @ManyToOne(() => Facultad, (table) => table.movilities)
+  @JoinColumn({ name: "faculty_id" })
+  faculty: Facultad;
+
+  @ManyToOne(() => Programa, (table) => table.movilities)
+  @JoinColumn({ name: "program_id" })
+  program: Programa;
+
+  @ManyToOne(() => Semester, (table) => table.movilities)
+  @JoinColumn({ name: "semester_id" })
+  semester: Semester;
+
+  @ManyToOne(() => Actividad, (table) => table.movilities)
+  @JoinColumn({ name: "activity_id" })
+  activity: Actividad;
+
+  @ManyToOne(() => Countries, (table) => table.movilities)
+  @JoinColumn({ name: "origin_country_id" })
+  origin_country: Countries;
+
+  @ManyToOne(() => Countries, (table) => table.movilities_destination)
+  @JoinColumn({ name: "destiny_country_id" })
+  destiny_country: Countries;
+
+  @ManyToOne(() => MobilityApplication, (table) => table.movilities)
+  @JoinColumn({ name: "application_id" })
+  mobility_application: MobilityApplication;
+
+  @ManyToOne(() => FuenteFinanciacionNacional, (table) => table.movilities)
+  @JoinColumn({ name: "national_financing_id" })
+  national_financing: FuenteFinanciacionNacional;
+
+  @ManyToOne(() => FuenteFinanciacionInternacional, (table) => table.movilities)
+  @JoinColumn({ name: "international_financing_id" })
+  international_financing: FuenteFinanciacionInternacional;
+
+  @ManyToOne(() => Countries, (table) => table.movilities)
+  @JoinColumn({ name: "financer_country_id" })
+  financer_country: Countries;
+
+  @ManyToOne(() => ModalidadMovilidad, (table) => table.movilities)
+  @JoinColumn({ name: "mobility_class_id" })
+  mobility_class: ModalidadMovilidad;
+
+  @ManyToOne(() => Rol, (table) => table.movilities)
+  @JoinColumn({ name: "rol_id" })
+  rol: Rol;
+
+  @ManyToOne(() => Convenio, (table) => table.movilities)
+  @JoinColumn({ name: "agreement_id" })
+  agreement: Convenio;
 }

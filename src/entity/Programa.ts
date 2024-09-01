@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Facultad } from "./Facultad";
+import { MovilidadActor } from "./MovilidadActor";
 import { ProgramaInstitucion } from "./ProgramaInstitucion";
 
 @Entity()
@@ -26,4 +27,7 @@ export class Programa {
 
   @OneToMany(() => ProgramaInstitucion, (table) => table.program)
   instituciones: ProgramaInstitucion[];
+
+  @OneToMany(() => MovilidadActor, (table) => table.program)
+  movilities: MovilidadActor[];
 }

@@ -1,10 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, PrimaryGeneratedColumn } from "typeorm";
 
 export abstract class BaseCatalogEntity {
   @PrimaryGeneratedColumn()
@@ -13,12 +7,12 @@ export abstract class BaseCatalogEntity {
   @Column()
   nombre: string;
 
-  @CreateDateColumn()
-  fecha_creacion: Date;
+  // @CreateDateColumn()
+  // fecha_creacion: Date;
 
-  @UpdateDateColumn()
-  fecha_actualizacion: Date;
+  // @UpdateDateColumn()
+  // fecha_actualizacion: Date;
 
-  @DeleteDateColumn()
-  fecha_eliminacion: Date;
+  // @DeleteDateColumn()
+  // fecha_eliminacion: Date;
 }

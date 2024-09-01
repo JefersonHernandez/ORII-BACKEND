@@ -108,6 +108,17 @@ export class ConvenioController {
     return res.status(200).json(data);
   };
 
+  static readonly getAgreementsForMovilities = async (
+    _: Request,
+    res: Response
+  ) => {
+    const repository = AppDataSource.getRepository(Convenio);
+
+    const data = await repository.find({ select: ["id", "code", "title"] });
+
+    return res.status(200).json(data);
+  };
+
   static readonly createAgreement = async (req: Request, res: Response) => {
     const {
       name,

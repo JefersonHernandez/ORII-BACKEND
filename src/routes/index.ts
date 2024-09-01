@@ -1,5 +1,6 @@
 import { Router } from "express";
 import actor from "./actor";
+import actor_type from "./actor_type";
 import auth from "./auth";
 import calendar from "./calendar";
 import catalog from "./catalog";
@@ -68,5 +69,6 @@ routes.use("/roles", roles);
 routes.use("/user_roles", user_roles);
 routes.use("/calendar", calendar);
 routes.use("/drive", drive);
+routes.use("/actor_type", actor_type);
 
 export default routes;

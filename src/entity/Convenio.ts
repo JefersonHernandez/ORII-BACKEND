@@ -6,6 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { MovilidadActor } from "./MovilidadActor";
 import { ProgramaInstitucionConvenio } from "./ProgramaInstitucionConvenio";
 import { TipoConvenio } from "./TipoConvenio";
 import { TipoMovilidadConvenioConvenio } from "./TipoMovilidadConvenioConvenio";
@@ -57,4 +58,7 @@ export class Convenio {
 
   @OneToMany(() => ProgramaInstitucionConvenio, (table) => table.agreement)
   programInstitutionAgreements: ProgramaInstitucionConvenio[];
+
+  @OneToMany(() => MovilidadActor, (table) => table.agreement)
+  movilities: MovilidadActor[];
 }

@@ -10,4 +10,7 @@ export abstract class Parameters {
 
   @Column()
   main_country_id: number;
+
+  @Column()
+  application_id: number;
 }

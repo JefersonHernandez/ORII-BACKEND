@@ -23,11 +23,11 @@ router.get(
   MovilidadController.getDataMovilidadById
 );
 
-router.get(
-  "/:codigo",
-  [checkJwt, checkRole(["admin"])],
-  MovilidadController.getDataMovilidadByCodigo
-);
+// router.get(
+//   "/:codigo",
+//   [checkJwt, checkRole(["admin"])],
+//   MovilidadController.getDataMovilidadByCodigo
+// );
 
 router.post(
   "/",
