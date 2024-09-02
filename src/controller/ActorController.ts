@@ -124,7 +124,7 @@ export class ActorController {
           marital_status: true,
           country_of_birth: true,
         },
-        where: { codigo: req.params.codigo },
+        where: { codigo: Number(req.params.codigo) },
       });
       res.send(data);
     } catch (error) {

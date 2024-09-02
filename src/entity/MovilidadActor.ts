@@ -101,10 +101,10 @@ export class MovilidadActor {
   international_financing_amount: number;
 
   @Column()
-  code: number;
+  actor_code: number;
 
   @ManyToOne(() => Actor, (actor) => actor.movilidades)
-  @JoinColumn({ name: "code" })
+  @JoinColumn({ name: "actor_code" })
   actor: Actor;
 
   @Column()

@@ -10,7 +10,7 @@ export class MovilidadController {
     const {
       mobility_type_id,
       mobility_class_id,
-      code,
+      actor_code,
       faculty_id,
       program_id,
       year,
@@ -44,7 +44,7 @@ export class MovilidadController {
     mov.mobility_type_id = mobility_type_id;
     mov.mobility_source_id = mobility_source_id;
     mov.mobility_class_id = mobility_class_id;
-    mov.code = code;
+    mov.actor_code = actor_code;
     mov.faculty_id = faculty_id;
     mov.program_id = program_id;
     mov.year = year;
@@ -75,6 +75,8 @@ export class MovilidadController {
     try {
       const movReporsitory = AppDataSource.getRepository(MovilidadActor);
       await movReporsitory.save(mov);
+      res.status(200);
+      res.send();
     } catch (error) {
       res.status(500);
       res.send();
@@ -85,7 +87,7 @@ export class MovilidadController {
     const {
       mobility_type_id,
       mobility_class_id,
-      code,
+      actor_code,
       faculty_id,
       program_id,
       year,
@@ -128,7 +130,7 @@ export class MovilidadController {
       mov.mobility_type_id = mobility_type_id;
       mov.mobility_source_id = mobility_source_id;
       mov.mobility_class_id = mobility_class_id;
-      mov.code = code;
+      mov.actor_code = actor_code;
       mov.faculty_id = faculty_id;
       mov.program_id = program_id;
       mov.year = year;
@@ -165,35 +167,6 @@ export class MovilidadController {
       res.send();
     }
   };
-
-  // static getDataMovilidadByCodigo = async (req: Request, res: Response) => {
-  //   const { codigo } = req.params;
-
-  //   const movilidadReporsitory = AppDataSource.getRepository(MovilidadActor);
-  //   try {
-  //     const data = await movilidadReporsitory.find({
-  //       relations: {
-  //         actor: true,
-  //       },
-  //       where: {
-  //         id: Number(codigo),
-  //       },
-  //     });
-
-  //     if (data) {
-  //       res.send(data);
-  //     } else {
-  //       res.status(404).json({
-  //         message: "Usuario no encontrado",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     res.status(404).json({
-  //       message: "Sin resultados",
-  //       error,
-  //     });
-  //   }
-  // };
 
   static getDataMovilidadById = async (req: Request, res: Response) => {
     const { id } = req.params;
