@@ -1,17 +1,44 @@
 import { Router } from "express";
+import { MovilidadController } from "../controller/MovilidadController";
 import { checkJwt } from "../middlewares/JWT";
 import { checkRole } from "../middlewares/role";
-import { ActorController } from "../controller/ActorController";
-import { MovilidadController } from "../controller/MovilidadController";
 
 const router = Router();
 
+router.get(
+  "/recent",
+  [checkJwt, checkRole(["admin"])],
+  MovilidadController.getRecentMovility
+);
 
-router.get("/recent", MovilidadController.getRecentMovility);
-router.get("/", MovilidadController.getAllMovility);
-router.get("/id/:id", MovilidadController.getDataMovilidadById);
-router.get("/:codigo", MovilidadController.getDataMovilidadByCodigo);
-router.post("/", MovilidadController.newMovilidad);
+router.get(
+  "/",
+  [checkJwt, checkRole(["admin"])],
+  MovilidadController.getAllMovility
+);
 
+router.get(
+  "/:id",
+  [checkJwt, checkRole(["admin"])],
+  MovilidadController.getDataMovilidadById
+);
+
+// router.get(
+//   "/:codigo",
+//   [checkJwt, checkRole(["admin"])],
+//   MovilidadController.getDataMovilidadByCodigo
+// );
+
+router.post(
+  "/",
+  [checkJwt, checkRole(["admin"])],
+  MovilidadController.newMovilidad
+);
+
+router.put(
+  "/:id",
+  [checkJwt, checkRole(["admin"])],
+  MovilidadController.updateMovilidad
+);
 
 export default router;

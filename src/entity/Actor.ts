@@ -1,10 +1,19 @@
-import { Column, Entity, JoinTable, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+} from "typeorm";
+import { Countries } from "./Countries";
+import { EstadoCivil } from "./EstadoCivil";
+import { Gender } from "./Gender";
 import { MovilidadActor } from "./MovilidadActor";
+import { TipoDocumento } from "./TipoDocumento";
 
 @Entity()
 export class Actor {
- 
-
   @Column()
   nombres: string;
 
@@ -20,35 +29,29 @@ export class Actor {
   @Column()
   email_inst: string;
 
-  
   @Column()
-  tipo_doc: string;
+  document_id: number;
 
-  
   @Column()
   numero_doc: string;
 
-  
   @Column()
   expedido_en: string;
 
-  
   @Column()
   fecha_expedicion: Date;
 
-  
   @Column()
-  sexo: string;
+  sex_id: number;
 
-  
   @Column()
-  est_civil: string;
+  marital_status_id: number;
 
   @Column()
   fecha_nac: Date;
 
   @Column()
-  pais_nac: string;
+  country_of_birth_id: number;
 
   @Column()
   departamento: string;
@@ -59,8 +62,22 @@ export class Actor {
   @Column()
   celular: string;
 
+  @OneToMany(() => MovilidadActor, (table) => table.actor)
+  movilidades: MovilidadActor[];
 
-  @OneToMany(()=>MovilidadActor, (movilidad)=>movilidad.actor)
-  movilidades : MovilidadActor[];
-  
+  @ManyToOne(() => TipoDocumento, (table) => table.actors)
+  @JoinColumn({ name: "document_id" })
+  document: TipoDocumento;
+
+  @ManyToOne(() => Gender, (table) => table.actors)
+  @JoinColumn({ name: "sex_id" })
+  sex: Gender;
+
+  @ManyToOne(() => EstadoCivil, (table) => table.actors)
+  @JoinColumn({ name: "marital_status_id" })
+  marital_status: EstadoCivil;
+
+  @ManyToOne(() => Countries, (table) => table.actors)
+  @JoinColumn({ name: "country_of_birth_id" })
+  country_of_birth: Countries;
 }

@@ -1,18 +1,16 @@
 import { Router } from "express";
-import { UserController } from "../controller/UserController";
+import { CountryController } from "../controller/CountryController";
 import { checkJwt } from "../middlewares/JWT";
 import { checkRole } from "../middlewares/role";
-import { CountryController } from "../controller/CountryController";
+
 const router = Router();
 
-//Obtener los usuarios
+router.get(
+  "/codigos",
+  [checkJwt, checkRole(["admin"])],
+  CountryController.getCodigos
+);
 
-
-
-
-router.get("/", CountryController.getPaises);
-
-router.get("/codigos", CountryController.getCodigos);
-
+router.get("/", [checkJwt, checkRole(["admin"])], CountryController.getPaises);
 
 export default router;

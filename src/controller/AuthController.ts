@@ -1,53 +1,41 @@
-import { Request, Response } from "express";
-import { User } from "../entity/User";
-import { AppDataSource } from "../data-source";
-import config from "../config/config";
-import * as jwt from "jsonwebtoken";
 import { validate } from "class-validator";
+import { Request, Response } from "express";
+import * as jwt from "jsonwebtoken";
+import config from "../config/config";
+import { AppDataSource } from "../data-source";
+import { User } from "../entity/User";
 
 class AuthController {
-  static login = async (req: Request, res: Response) => {
+  static readonly login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
+
     if (!(email || password)) {
-      return res.status(400).json({
-        message: "Email y Contraseña son requeridos!",
-      });
+      throw new Error("Email and Password are required!");
     }
 
-    const userReporsitory = AppDataSource.getRepository(User);
-    let user: User;
+    const reporsitory = AppDataSource.getRepository(User);
 
     try {
-      user = await userReporsitory.findOneOrFail({
+      let user = await reporsitory.findOneOrFail({
         where: { email: email },
       });
-    } catch (e) {
+
+      if (!user.checkPassword(password)) {
+        throw new Error("Email or password are incorrect!");
+      }
+
+      const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        config.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+
+      res.json({ id: user.id, token, role: "admin" });
+    } catch (error) {
       return res.status(400).json({
-        message: "Email o Contraseña Incorrectas, verifique nuevamente!",
+        message: error.message,
       });
     }
-
-    //Check user
-
-    if (!user.checkPassword(password)) {
-      return res.status(400).json({
-        message: "Email o contraseña estan incorrectos!",
-      });
-    }
-
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      config.jwtSecret,
-      { expiresIn: "1h" }
-    );
-
-    res.json({
-      message: "Inicio de Sesion Exitoso",
-      token: token,
-      username: user.firstName+" "+user.lastName,
-      userId: user.id,
-      role: user.role,
-    });
   };
 
   static changePassword = async (req: Request, res: Response) => {

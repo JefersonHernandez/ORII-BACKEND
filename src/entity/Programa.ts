@@ -1,9 +1,17 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Facultad } from "./Facultad";
-
+import { MovilidadActor } from "./MovilidadActor";
+import { ProgramaInstitucion } from "./ProgramaInstitucion";
 
 @Entity()
-export class Programa{
+export class Programa {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,10 +19,15 @@ export class Programa{
   name: string;
 
   @Column()
-  facultadId: number;
+  faculty_id: number;
 
-  @ManyToOne(()=>Facultad, (facultad)=>facultad.programas)
-  @JoinColumn({ name: 'facultadId'})
-
+  @ManyToOne(() => Facultad, (table) => table.programas)
+  @JoinColumn({ name: "faculty_id" })
   facultad: Facultad;
+
+  @OneToMany(() => ProgramaInstitucion, (table) => table.program)
+  instituciones: ProgramaInstitucion[];
+
+  @OneToMany(() => MovilidadActor, (table) => table.program)
+  movilities: MovilidadActor[];
 }

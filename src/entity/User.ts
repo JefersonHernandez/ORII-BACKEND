@@ -1,14 +1,15 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  Unique,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  Unique,
 } from "typeorm";
 
-import { MinLength, IsNotEmpty, IsEmail } from "class-validator";
 import * as bcrypt from "bcryptjs";
+import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
+import { Roles } from "./Roles";
 
 @Entity()
 @Unique(["email"])
@@ -24,6 +25,9 @@ export class User {
 
   @Column()
   age: number;
+
+  @Column()
+  sex: boolean;
 
   @Column()
   @MinLength(10)
@@ -46,6 +50,9 @@ export class User {
   @Column()
   @CreateDateColumn()
   updateAt: Date;
+
+  @ManyToMany(() => Roles, (table) => table.users)
+  roles: Roles[];
 
   hashPassword(): void {
     const salt = bcrypt.genSaltSync(10);

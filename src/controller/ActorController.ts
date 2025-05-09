@@ -1,85 +1,154 @@
 import { Request, Response } from "express";
-import { Actor } from "../entity/Actor";
 import { AppDataSource } from "../data-source";
+import { Actor } from "../entity/Actor";
 
-
-export class ActorController{
-
-static newActor = async (req: Request, res: Response) =>{
-
-    const { email, 	nombres, apellidos, codigo, email_inst, tipo_doc, numero_doc, expedido_en, fecha_expedicion, sexo, est_civil, fecha_nac, pais_nac, departamento, municipio, celular } = req.body;
-
-    const act = new Actor();
-
-    
-
-    act.email = email;
-    act.nombres = nombres;
-    act.apellidos = apellidos;
-    act.codigo = codigo;
-    act.email_inst = email_inst;
-    act.tipo_doc = tipo_doc;
-    act.numero_doc = numero_doc;
-    act.expedido_en = expedido_en;
-    act.fecha_expedicion = fecha_expedicion;
-    act.sexo = sexo;
-    act.est_civil = est_civil;
-    act.fecha_nac = fecha_nac;
-    act.pais_nac = pais_nac;
-    act.email = email;
-    act.departamento = departamento;
-    act.municipio = municipio;
-    act.celular = celular
-    
+export class ActorController {
+  static newActor = async (req: Request, res: Response) => {
+    const {
+      email,
+      name,
+      lastname,
+      code,
+      institutional_email,
+      document_number,
+      issued_on,
+      issued_date,
+      date_bithday,
+      state_bithday,
+      municipality_bithday,
+      biological_sex,
+      document_type,
+      country_birthday,
+      marital_status,
+      phone_number,
+    } = req.body;
 
     try {
-        const actReporsitory = AppDataSource.getRepository(Actor);
-        await actReporsitory.save(act);
+      const actor = new Actor();
+
+      actor.email = email;
+      actor.nombres = name;
+      actor.apellidos = lastname;
+      actor.codigo = code;
+      actor.email_inst = institutional_email;
+      actor.document_id = document_type;
+      actor.numero_doc = document_number;
+      actor.expedido_en = issued_on;
+      actor.fecha_expedicion = issued_date;
+      actor.sex_id = biological_sex;
+      actor.marital_status_id = marital_status;
+      actor.fecha_nac = date_bithday;
+      actor.country_of_birth_id = country_birthday;
+      actor.email = email;
+      actor.departamento = state_bithday;
+      actor.municipio = municipality_bithday;
+      actor.celular = phone_number;
+
+      const reporsitory = AppDataSource.getRepository(Actor);
+
+      await reporsitory.save(actor);
+      res.status(201);
+      res.send();
     } catch (error) {
-      console.log(error);
-        return res.status(409).json({
-            message:
-              "Algo ha ido mal al intentar guardar el actor",
-          });
+      res.status(500);
+      res.send();
     }
+  };
 
-    return res.status(201).json({
-        message:
-          "Actor creado exitosamente!",
+  static updateActor = async (req: Request, res: Response) => {
+    const {
+      email,
+      name,
+      lastname,
+      code,
+      institutional_email,
+      document_number,
+      issued_on,
+      issued_date,
+      date_bithday,
+      state_bithday,
+      municipality_bithday,
+      biological_sex,
+      document_type,
+      country_birthday,
+      marital_status,
+      phone_number,
+    } = req.body;
+
+    try {
+      const repository = AppDataSource.getRepository(Actor);
+
+      const actor = await repository.findOneBy({
+        codigo: Number(req.params.codigo),
       });
 
-}
+      if (!actor) {
+        return res.status(404).json({ error: "Not found" });
+      }
 
+      actor.email = email;
+      actor.nombres = name;
+      actor.apellidos = lastname;
+      actor.codigo = Number(code);
+      actor.email_inst = institutional_email;
+      actor.document_id = document_type;
+      actor.numero_doc = document_number;
+      actor.expedido_en = issued_on;
+      actor.fecha_expedicion = issued_date;
+      actor.sex_id = biological_sex;
+      actor.marital_status_id = marital_status;
+      actor.fecha_nac = date_bithday;
+      actor.country_of_birth_id = country_birthday;
+      actor.email = email;
+      actor.departamento = state_bithday;
+      actor.municipio = municipality_bithday;
+      actor.celular = phone_number;
 
-static getDataActorByCodigo = async (req: Request, res: Response) => {
-  const { codigo } = req.params;
-  let idNum = parseInt(codigo);
-  const actorReporsitory = AppDataSource.getRepository(Actor);
-  try {
-      const data = await actorReporsitory.find({
+      await repository.save(actor);
+      res.status(201);
+      res.send();
+    } catch (error) {
+      res.status(500);
+      res.send();
+    }
+  };
+
+  static getDataActorByCodigo = async (req: Request, res: Response) => {
+    const reporsitory = AppDataSource.getRepository(Actor);
+
+    try {
+      const data = await reporsitory.findOne({
         relations: {
-            movilidades: true,
-        },where: {
-          codigo: idNum
-        }
-    })
-     
-      if (data) {
-          res.send(data);
-        } else {
-          res.status(404).json({
-            message: "Usuario no encontrado",
-          });
-        }
-
-  } catch (error) {
-    console.log(error);
-      res.status(404).json({
-          message: "Sin resultados",error,
+          document: true,
+          sex: true,
+          marital_status: true,
+          country_of_birth: true,
+        },
+        where: { codigo: Number(req.params.codigo) },
       });
-  }
+      res.send(data);
+    } catch (error) {
+      res.status(404);
+      res.send();
+    }
+  };
 
+  static getActors = async (_: Request, res: Response) => {
+    const reporsitory = AppDataSource.getRepository(Actor);
 
-}
-    
+    try {
+      const data = await reporsitory.find({
+        relations: {
+          document: true,
+          sex: true,
+          marital_status: true,
+          country_of_birth: true,
+        },
+      });
+      res.send(data);
+    } catch (error) {
+      res.status(404);
+      res.send();
+    }
+  };
 }

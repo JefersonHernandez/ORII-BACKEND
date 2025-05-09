@@ -1,13 +1,13 @@
-import * as express from "express";
-import * as bodyParser from "body-parser";
-import { Request, Response } from "express";
-import { AppDataSource } from "./data-source";
-import { User } from "./entity/User";
 import * as cors from "cors";
+import * as express from "express";
 import helmet from "helmet";
+import config from "./config/config";
+import { AppDataSource } from "./data-source";
 import routes from "./routes";
 
-const PORT = process.env.PORT || 3000;
+// import "../drive";
+
+const PORT = config.SERVER_PORT || 3000;
 
 AppDataSource.initialize()
   .then(async () => {

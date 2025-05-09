@@ -1,19 +1,17 @@
-import { AppDataSource } from "../data-source";
-import { NextFunction, Request, Response } from "express";
-import { User } from "../entity/User";
 import { validate } from "class-validator";
+import { Request, Response } from "express";
+import { AppDataSource } from "../data-source";
+import { User } from "../entity/User";
 
 export class UserController {
   static getAll = async (req: Request, res: Response) => {
     const userRepository = AppDataSource.getRepository(User);
 
-    try {
-      const users = await userRepository.find();
-    } catch (error) {
-      res.status(404).json({ message: error });
-    }
-
-    const users = await userRepository.find();
+    const users = await userRepository.find({
+      relations: {
+        roles: true,
+      },
+    });
 
     if (users.length > 0) {
       res.send(users);
@@ -24,26 +22,24 @@ export class UserController {
     }
   };
 
-  static getById = async (req: Request, res: Response) => {
+  static readonly getById = async (req: Request, res: Response) => {
     const { id } = req.params;
-    let idNum = parseInt(id);
-    const userReporsitory = AppDataSource.getRepository(User);
+
+    const reporsitory = AppDataSource.getRepository(User);
 
     try {
-      const user = await userReporsitory.findOneBy({
-        id: idNum,
+      const user = await reporsitory.findOneBy({
+        id: Number(id),
       });
 
-      if (user) {
-        res.send(user);
-      } else {
-        res.status(404).json({
-          message: "Usuario no encontrado",
-        });
+      if (!user) {
+        throw new Error("User not found");
       }
+
+      res.send(user);
     } catch (error) {
       res.status(404).json({
-        message: "No hay resultados",
+        message: error.message,
       });
     }
   };

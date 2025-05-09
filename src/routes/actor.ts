@@ -1,22 +1,23 @@
 import { Router } from "express";
+import { ActorController } from "../controller/ActorController";
 import { checkJwt } from "../middlewares/JWT";
 import { checkRole } from "../middlewares/role";
-import { ActorController } from "../controller/ActorController";
 
 const router = Router();
 
-//Obtener los usuarios
+router.get("/", [checkJwt, checkRole(["admin"])], ActorController.getActors);
 
+router.get(
+  "/:codigo",
+  [checkJwt, checkRole(["admin"])],
+  ActorController.getDataActorByCodigo
+);
 
-
-//Obtener datos de una facultad especifica
-
-router.get("/:codigo", ActorController.getDataActorByCodigo);
-
-
-//Obtener datos de todas las facultades
-
-router.post("/", ActorController.newActor);
-
+router.post("/", [checkJwt, checkRole(["admin"])], ActorController.newActor);
+router.put(
+  "/:codigo",
+  [checkJwt, checkRole(["admin"])],
+  ActorController.updateActor
+);
 
 export default router;

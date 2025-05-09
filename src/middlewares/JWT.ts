@@ -1,28 +1,31 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import config from "../config/config";
 
 export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
-  console.log("REQ->", req.headers);
-  const token = <string>req.headers["auth"];
-  let jwtPayload;
-
   try {
-    jwtPayload = <any>jwt.verify(token, config.jwtSecret);
+    let jwtPayload;
+
+    const authHeader = req.headers["authorization"] ?? "";
+
+    const token = authHeader.split(" ")[1];
+
+    jwtPayload = <any>jwt.verify(token, config.JWT_SECRET);
+
     res.locals.jwtPayload = jwtPayload;
+
+    const { userId, email } = jwtPayload;
+
+    const newToken = jwt.sign({ userId, email }, config.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.setHeader("token", newToken);
+
+    next();
   } catch (error) {
     return res.status(401).json({
-      message: "Sin acceso, token vencido",
+      message: "No access, token expired",
     });
   }
-
-  const { userId, email } = jwtPayload;
-
-  const newToken = jwt.sign({ userId, email }, config.jwtSecret, {
-    expiresIn: "1h",
-  });
-  res.setHeader("token", newToken);
-
-  //call next
-  next();
 };

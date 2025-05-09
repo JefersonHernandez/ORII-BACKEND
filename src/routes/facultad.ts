@@ -1,22 +1,20 @@
 import { Router } from "express";
-import { UserController } from "../controller/UserController";
+import { FacultadController } from "../controller/FacultadController";
 import { checkJwt } from "../middlewares/JWT";
 import { checkRole } from "../middlewares/role";
-import { FacultadController } from "../controller/FacultadController";
+
 const router = Router();
 
-//Obtener los usuarios
+router.get(
+  "/:id",
+  [checkJwt, checkRole(["admin"])],
+  FacultadController.getDataFacultadById
+);
 
-
-
-//Obtener datos de una facultad especifica
-
-router.get("/:id", FacultadController.getDataFacultadById);
-
-
-//Obtener datos de todas las facultades
-
-router.get("/", FacultadController.getAllDataOfFacultad);
-
+router.get(
+  "/",
+  [checkJwt, checkRole(["admin"])],
+  FacultadController.getAllDataOfFacultad
+);
 
 export default router;
